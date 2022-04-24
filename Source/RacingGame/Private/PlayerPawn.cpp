@@ -80,6 +80,7 @@ void APlayerPawn::Tick(float DeltaTime)
 	if (BoostActivated == true)
 	{
 		BoostDuration += DeltaTime;
+		BoostLeft = 6.f - BoostDuration;
 		if (BoostDuration > BoostLimit)
 		{
 			BoostActivated = false;
@@ -167,4 +168,93 @@ void APlayerPawn::MoveLeftRight(float Value) {
 void APlayerPawn::MoveUpDown(float Value) {
 	UpDownTurnSpeed = FMath::FInterpTo(UpDownTurnSpeed, Value, GetWorld()->GetDeltaSeconds(), 1.f);
 	AddActorLocalRotation(FRotator(1.f, 0.f, 0.f) * UpDownTurnSpeed);
+<<<<<<< Updated upstream
+=======
+}
+
+void APlayerPawn::BoostActivation() {
+	if (BoostActivated == false)
+	{
+		FloatingPawnMovementComp->MaxSpeed = 5000.0f;
+		BoostActivated = true;
+	}
+}
+
+void APlayerPawn::Shoot() {
+	if (Ammo > 0) 
+	{
+		Ammo -= 1;
+
+		UWorld* World = GetWorld();
+		if (World)
+		{
+			FVector Location = GetActorLocation();
+			World->SpawnActor<AActor>(BulletActorConnectionBP, Location + FVector(100.f, 0.f, 0.f), GetActorRotation());
+			UGameplayStatics::PlaySound2D(World, ShootingSound, 1.f, 1.f, 0.f, 0);
+
+		}
+	}
+
+	UE_LOG(LogTemp, Warning, TEXT("Shooting"));
+
+}
+
+int APlayerPawn::RetMaxHealth()
+{
+	return MaxHealth;
+}
+
+int APlayerPawn::RetHealth()
+{
+	return Health;
+}
+
+int APlayerPawn::RetMaxBoost()
+{
+	return BoostLimit;
+}
+
+int APlayerPawn::RetBoost()
+{
+	return BoostLeft;
+}
+
+int APlayerPawn::RetMaxAmmo()
+{
+	return MaxAmmo;
+}
+
+int APlayerPawn::RetAmmo()
+{
+	return Ammo;
+}
+
+void APlayerPawn::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent,
+	int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	//if (OtherActor->IsA(AAmmoCrate::StaticClass()))
+	//{
+	//	Cast<AAmmoCrate>(OtherActor)->ImHit();
+
+	//	Ammo = 30;
+	//	SpawnCrate = true;
+	//	UWorld* NewWorld = GetWorld();
+	//	UGameplayStatics::PlaySound2D(NewWorld, ReloadingSound, 1.f, 1.f, 0.f, 0);
+	//}
+
+	//if (OtherActor->IsA(AEnemy::StaticClass()))
+	//{
+	//	UE_LOG(LogTemp, Warning, TEXT("Ship hit enemy"));
+	//	GEngine->AddOnScreenDebugMessage(-1, 12.f, FColor::Red, FString::Printf(TEXT("You were defeated by the invaders. Game over!"), Ammo));
+	//	bEnemyDied = true;
+	//	this->SetActorHiddenInGame(true);
+	//	UGameplayStatics::SetGamePaused(GetWorld(), true);
+	//}
+	if (OtherActor->IsA(ATrackActor::StaticClass()))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Ship hit the track."));
+		GEngine->AddOnScreenDebugMessage(-1, 12.f, FColor::Red, FString::Printf(TEXT("You crashed into the track!")));
+		this->Destroy();
+	}
+>>>>>>> Stashed changes
 }
