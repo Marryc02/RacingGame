@@ -67,6 +67,14 @@ void APlayerPawn::BeginPlay()
 {
 	Super::BeginPlay();
 
+	if (CollisionBox)
+	{
+		CollisionBox->OnComponentBeginOverlap.AddDynamic(this, &APlayerPawn::OnOverlap);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("CollisionBox not found!"));
+	}
 }
 
 // Called every frame
@@ -110,6 +118,9 @@ void APlayerPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 
 }
 
+
+// Other
+
 void APlayerPawn::PauseGame() {
 	if (isPaused == false)
 	{
@@ -144,6 +155,9 @@ void APlayerPawn::SwitchPerspective() {
 		}
 }
 
+
+// Movement
+
 void APlayerPawn::StartAirBrakes() {
 	FloatingPawnMovementComp->MaxSpeed = 1000.0f;
 }
@@ -171,6 +185,9 @@ void APlayerPawn::BoostActivation() {
 	}
 }
 
+
+// Shooting
+
 void APlayerPawn::Shoot() {
 	if (Ammo > 0) 
 	{
@@ -180,7 +197,7 @@ void APlayerPawn::Shoot() {
 		if (World)
 		{
 			FVector Location = GetActorLocation();
-			World->SpawnActor<AActor>(BulletActorConnectionBP, Location + FVector(100.f, 0.f, 0.f), GetActorRotation());
+			World->SpawnActor<AActor>(BulletActorConnectionBP, Location + FVector(-100.f, 10.f, 0.f), GetActorRotation());
 			UGameplayStatics::PlaySound2D(World, ShootingSound, 1.f, 1.f, 0.f, 0);
 
 		}
@@ -189,6 +206,19 @@ void APlayerPawn::Shoot() {
 	UE_LOG(LogTemp, Warning, TEXT("Shooting"));
 
 }
+
+int APlayerPawn::RetMaxAmmo()
+{
+	return MaxAmmo;
+}
+
+int APlayerPawn::RetAmmo()
+{
+	return Ammo;
+}
+
+
+// Collision
 
 void APlayerPawn::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent,
 	int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)

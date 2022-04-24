@@ -87,6 +87,12 @@ public:
 	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
 		TSubclassOf<AActor> BulletActorConnectionBP;
 
+	UFUNCTION(BlueprintCallable)
+		int RetMaxAmmo();
+
+	UFUNCTION(BlueprintCallable)
+		int RetAmmo();
+
 
 private:
 
