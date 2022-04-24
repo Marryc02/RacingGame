@@ -71,6 +71,23 @@ public:
 	UPROPERTY(EditAnywhere, Category = "BoostTime")
 		float BoostDuration = 0.f;
 
+
+	// Shooting
+
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerMesh")
+		int Ammo = 30;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerMesh")
+		int MaxAmmo = 30;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerMesh")
+		USoundBase* ShootingSound = nullptr;
+
+	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
+		TSubclassOf<AActor> BulletActorConnectionBP;
+
+
 private:
 
 	bool isPaused = false;
@@ -90,4 +107,10 @@ private:
 	bool BoostActivated = false;
 	void BoostActivation();
 
+	void Shoot();
+
+
+	UFUNCTION()
+		void OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent,
+			int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 };
