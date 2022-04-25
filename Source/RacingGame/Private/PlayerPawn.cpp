@@ -75,6 +75,9 @@ void APlayerPawn::BeginPlay()
 	{
 		UE_LOG(LogTemp, Warning, TEXT("CollisionBox not found!"));
 	}
+
+	FloatingPawnMovementComp->MaxSpeed = 3000.0f;
+
 }
 
 // Called every frame
@@ -83,7 +86,7 @@ void APlayerPawn::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 
-	AddMovementInput(GetActorForwardVector(), 2.f);
+	AddMovementInput(GetActorForwardVector(), 1.0f);
 
 	
 	if (BoostActivated == true)
@@ -92,7 +95,7 @@ void APlayerPawn::Tick(float DeltaTime)
 		if (BoostDuration > BoostLimit)
 		{
 			BoostActivated = false;
-			FloatingPawnMovementComp->MaxSpeed = 2000.0f;
+			FloatingPawnMovementComp->MaxSpeed = 4000.0f;
 			BoostDuration = 0.f;
 		}
 	}
@@ -159,11 +162,11 @@ void APlayerPawn::SwitchPerspective() {
 // Movement
 
 void APlayerPawn::StartAirBrakes() {
-	FloatingPawnMovementComp->MaxSpeed = 1000.0f;
+	FloatingPawnMovementComp->MaxSpeed = 3000.0f;
 }
 
 void APlayerPawn::StopAirBrakes() {
-	FloatingPawnMovementComp->MaxSpeed = 2000.0f;
+	FloatingPawnMovementComp->MaxSpeed = 4000.0f;
 }
 
 void APlayerPawn::MoveLeftRight(float Value) {
@@ -180,7 +183,7 @@ void APlayerPawn::MoveUpDown(float Value) {
 void APlayerPawn::BoostActivation() {
 	if (BoostActivated == false)
 	{
-		FloatingPawnMovementComp->MaxSpeed = 5000.0f;
+		FloatingPawnMovementComp->MaxSpeed = 8000.0f;
 		BoostActivated = true;
 	}
 }
@@ -189,32 +192,17 @@ void APlayerPawn::BoostActivation() {
 // Shooting
 
 void APlayerPawn::Shoot() {
-	if (Ammo > 0) 
-	{
-		Ammo -= 1;
-
 		UWorld* World = GetWorld();
 		if (World)
 		{
 			FVector Location = GetActorLocation();
-			World->SpawnActor<AActor>(BulletActorConnectionBP, Location + FVector(-100.f, 10.f, 0.f), GetActorRotation());
+			World->SpawnActor<AActor>(BulletActorConnectionBP, Location + FVector(50.f, 0.f, 0.f), GetActorRotation());
 			UGameplayStatics::PlaySound2D(World, ShootingSound, 1.f, 1.f, 0.f, 0);
 
 		}
-	}
 
 	UE_LOG(LogTemp, Warning, TEXT("Shooting"));
 
-}
-
-int APlayerPawn::RetMaxAmmo()
-{
-	return MaxAmmo;
-}
-
-int APlayerPawn::RetAmmo()
-{
-	return Ammo;
 }
 
 

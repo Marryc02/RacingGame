@@ -64,7 +64,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
 		class UFloatingPawnMovement* FloatingPawnMovementComp = nullptr;
 
-
 	UPROPERTY(EditAnywhere, Category = "BoostTime")
 		float BoostLimit = 5.f;
 
@@ -76,22 +75,10 @@ public:
 
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerMesh")
-		int Ammo = 30;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerMesh")
-		int MaxAmmo = 30;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerMesh")
 		USoundBase* ShootingSound = nullptr;
 
 	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
 		TSubclassOf<AActor> BulletActorConnectionBP;
-
-	UFUNCTION(BlueprintCallable)
-		int RetMaxAmmo();
-
-	UFUNCTION(BlueprintCallable)
-		int RetAmmo();
 
 
 private:
