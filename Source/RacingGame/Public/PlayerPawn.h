@@ -64,37 +64,15 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
 		class UFloatingPawnMovement* FloatingPawnMovementComp = nullptr;
 
-
 	UPROPERTY(EditAnywhere, Category = "BoostTime")
 		float BoostLimit = 5.f;
 
 	UPROPERTY(EditAnywhere, Category = "BoostTime")
 		float BoostDuration = 0.f;
 
-<<<<<<< Updated upstream
-=======
-	UPROPERTY(EditAnywhere, Category = "BoostTime")
-		float BoostLeft = 5.f;
-
-
-	// Health
-
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerMesh")
-		int Health = 5;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerMesh")
-		int MaxHealth = 5;
-
 
 	// Shooting
 
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerMesh")
-		int Ammo = 30;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerMesh")
-		int MaxAmmo = 30;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerMesh")
 		USoundBase* ShootingSound = nullptr;
@@ -103,26 +81,6 @@ public:
 		TSubclassOf<AActor> BulletActorConnectionBP;
 
 
-	// HUD
-
-	
-	UFUNCTION(BlueprintCallable)
-		int RetMaxHealth();
-	UFUNCTION(BlueprintCallable)
-		int RetHealth();
-
-	UFUNCTION(BlueprintCallable)
-		int RetMaxBoost();
-	UFUNCTION(BlueprintCallable)
-		int RetBoost();
-
-	UFUNCTION(BlueprintCallable)
-		int RetMaxAmmo();
-	UFUNCTION(BlueprintCallable)
-		int RetAmmo();
-
-
->>>>>>> Stashed changes
 private:
 
 	bool isPaused = false;
@@ -142,14 +100,10 @@ private:
 	bool BoostActivated = false;
 	void BoostActivation();
 
-<<<<<<< Updated upstream
-=======
 	void Shoot();
+
 
 	UFUNCTION()
 		void OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent,
 			int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
-
-
->>>>>>> Stashed changes
 };

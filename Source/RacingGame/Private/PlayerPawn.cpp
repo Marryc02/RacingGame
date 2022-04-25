@@ -6,6 +6,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/FloatingPawnMovement.h"
 #include "Camera/CameraComponent.h"
+#include "TrackActor.h"
 
 // Sets default values
 APlayerPawn::APlayerPawn()
@@ -34,7 +35,7 @@ APlayerPawn::APlayerPawn()
 	SpringArm->bEnableCameraLag = false;
 	SpringArm->CameraLagSpeed = 5.f;
 
-	SpringArm->SetupAttachment(PlayerMesh);
+	SpringArm->SetupAttachment(CollisionBox);
 
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->bUsePawnControlRotation = false;
@@ -52,7 +53,7 @@ APlayerPawn::APlayerPawn()
 	SpringArm2->bEnableCameraLag = false;
 	SpringArm2->CameraLagSpeed = 5.f;
 
-	SpringArm2->SetupAttachment(PlayerMesh);
+	SpringArm2->SetupAttachment(CollisionBox);
 
 	Camera2 = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera2"));
 	Camera2->bUsePawnControlRotation = false;
@@ -66,6 +67,17 @@ void APlayerPawn::BeginPlay()
 {
 	Super::BeginPlay();
 
+	if (CollisionBox)
+	{
+		CollisionBox->OnComponentBeginOverlap.AddDynamic(this, &APlayerPawn::OnOverlap);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("CollisionBox not found!"));
+	}
+
+	FloatingPawnMovementComp->MaxSpeed = 3000.0f;
+
 }
 
 // Called every frame
@@ -74,17 +86,16 @@ void APlayerPawn::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 
-	AddMovementInput(GetActorForwardVector(), 1.f);
+	AddMovementInput(GetActorForwardVector(), 1.0f);
 
 	
 	if (BoostActivated == true)
 	{
 		BoostDuration += DeltaTime;
-		BoostLeft = 6.f - BoostDuration;
 		if (BoostDuration > BoostLimit)
 		{
 			BoostActivated = false;
-			FloatingPawnMovementComp->MaxSpeed = 1000.0f;
+			FloatingPawnMovementComp->MaxSpeed = 4000.0f;
 			BoostDuration = 0.f;
 		}
 	}
@@ -106,8 +117,12 @@ void APlayerPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	PlayerInputComponent->BindAxis("MoveUpDown", this, &APlayerPawn::MoveUpDown);
 
 	PlayerInputComponent->BindAction("BoostPower", EInputEvent::IE_Pressed, this, &APlayerPawn::BoostActivation);
+	PlayerInputComponent->BindAction("Shoot", EInputEvent::IE_Pressed, this, &APlayerPawn::Shoot);
 
 }
+
+
+// Other
 
 void APlayerPawn::PauseGame() {
 	if (isPaused == false)
@@ -143,20 +158,15 @@ void APlayerPawn::SwitchPerspective() {
 		}
 }
 
-void APlayerPawn::BoostActivation() {
-	if (BoostActivated == false)
-	{
-		FloatingPawnMovementComp->MaxSpeed = 5000.0f;
-		BoostActivated = true;
-	}
-}
+
+// Movement
 
 void APlayerPawn::StartAirBrakes() {
-	FloatingPawnMovementComp->MaxSpeed = 500.0f;
+	FloatingPawnMovementComp->MaxSpeed = 3000.0f;
 }
 
 void APlayerPawn::StopAirBrakes() {
-	FloatingPawnMovementComp->MaxSpeed = 1000.0f;
+	FloatingPawnMovementComp->MaxSpeed = 4000.0f;
 }
 
 void APlayerPawn::MoveLeftRight(float Value) {
@@ -168,66 +178,35 @@ void APlayerPawn::MoveLeftRight(float Value) {
 void APlayerPawn::MoveUpDown(float Value) {
 	UpDownTurnSpeed = FMath::FInterpTo(UpDownTurnSpeed, Value, GetWorld()->GetDeltaSeconds(), 1.f);
 	AddActorLocalRotation(FRotator(1.f, 0.f, 0.f) * UpDownTurnSpeed);
-<<<<<<< Updated upstream
-=======
 }
 
 void APlayerPawn::BoostActivation() {
 	if (BoostActivated == false)
 	{
-		FloatingPawnMovementComp->MaxSpeed = 5000.0f;
+		FloatingPawnMovementComp->MaxSpeed = 8000.0f;
 		BoostActivated = true;
 	}
 }
 
-void APlayerPawn::Shoot() {
-	if (Ammo > 0) 
-	{
-		Ammo -= 1;
 
+// Shooting
+
+void APlayerPawn::Shoot() {
 		UWorld* World = GetWorld();
 		if (World)
 		{
 			FVector Location = GetActorLocation();
-			World->SpawnActor<AActor>(BulletActorConnectionBP, Location + FVector(100.f, 0.f, 0.f), GetActorRotation());
+			World->SpawnActor<AActor>(BulletActorConnectionBP, Location + FVector(50.f, 0.f, 0.f), GetActorRotation());
 			UGameplayStatics::PlaySound2D(World, ShootingSound, 1.f, 1.f, 0.f, 0);
 
 		}
-	}
 
 	UE_LOG(LogTemp, Warning, TEXT("Shooting"));
 
 }
 
-int APlayerPawn::RetMaxHealth()
-{
-	return MaxHealth;
-}
 
-int APlayerPawn::RetHealth()
-{
-	return Health;
-}
-
-int APlayerPawn::RetMaxBoost()
-{
-	return BoostLimit;
-}
-
-int APlayerPawn::RetBoost()
-{
-	return BoostLeft;
-}
-
-int APlayerPawn::RetMaxAmmo()
-{
-	return MaxAmmo;
-}
-
-int APlayerPawn::RetAmmo()
-{
-	return Ammo;
-}
+// Collision
 
 void APlayerPawn::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent,
 	int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -256,5 +235,4 @@ void APlayerPawn::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* Ot
 		GEngine->AddOnScreenDebugMessage(-1, 12.f, FColor::Red, FString::Printf(TEXT("You crashed into the track!")));
 		this->Destroy();
 	}
->>>>>>> Stashed changes
 }
