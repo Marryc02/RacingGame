@@ -13,5 +13,17 @@ UCLASS()
 class RACINGGAME_API ARacingGameGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
+
+public:
+	ARacingGameGameModeBase();
+
+	virtual void BeginPlay() override;
+
+	virtual void Tick(float DeltaTime) override;
 	
+private:
+
+
 };
+
+

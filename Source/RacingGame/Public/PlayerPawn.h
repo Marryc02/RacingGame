@@ -28,8 +28,17 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 
-	// Other
+	// On startup
+	
+	FTimerHandle StartTimer;
 
+	UFUNCTION()
+		void OnStartTimerComplete();
+
+	bool gameHasStarted = false;
+
+
+	// Other
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerMesh")
 		class UShapeComponent* CollisionBox = nullptr;
@@ -39,7 +48,6 @@ public:
 
 
 	// Cameras
-
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Cameras")
 		class USpringArmComponent* SpringArm {
@@ -60,7 +68,6 @@ public:
 
 	// Movement
 
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
 		class UFloatingPawnMovement* FloatingPawnMovementComp = nullptr;
 
@@ -76,7 +83,6 @@ public:
 
 	// Health
 
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerMesh")
 		int Health = 5;
 
@@ -85,7 +91,6 @@ public:
 
 
 	// Shooting
-
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerMesh")
 		USoundBase* ShootingSound = nullptr;
@@ -96,7 +101,6 @@ public:
 
 	// Return varibles
 
-
 	UFUNCTION(BlueprintCallable)
 		int RetMaxHealth();
 	UFUNCTION(BlueprintCallable)
@@ -106,6 +110,11 @@ public:
 		int RetMaxBoost();
 	UFUNCTION(BlueprintCallable)
 		int RetBoost();
+
+
+	// Start line and checkpoints
+
+	int FinishLineCrossed = 0;
 
 
 private:

@@ -6,7 +6,9 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/FloatingPawnMovement.h"
 #include "Camera/CameraComponent.h"
+#include "Kismet/GameplayStatics.h"
 #include "TrackActor.h"
+#include "StartLineActor.h"
 
 // Sets default values
 APlayerPawn::APlayerPawn()
@@ -67,6 +69,12 @@ void APlayerPawn::BeginPlay()
 {
 	Super::BeginPlay();
 
+	APlayerController* PlayerController = GetWorld()->GetFirstLocalPlayerFromController()->GetPlayerController(GetWorld());
+	FInputModeUIOnly InputMode{};
+	PlayerController->SetInputMode(InputMode);
+
+	GetWorld()->GetTimerManager().SetTimer(StartTimer, this, &APlayerPawn::OnStartTimerComplete, 3.f, false);
+
 	if (CollisionBox)
 	{
 		CollisionBox->OnComponentBeginOverlap.AddDynamic(this, &APlayerPawn::OnOverlap);
@@ -84,7 +92,10 @@ void APlayerPawn::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 
-	AddMovementInput(GetActorForwardVector(), 1.0f);
+	if (gameHasStarted == true)
+	{
+		AddMovementInput(GetActorForwardVector(), 1.0f);
+	}
 
 	
 	if (BoostActivated == true)
@@ -97,6 +108,12 @@ void APlayerPawn::Tick(float DeltaTime)
 			FloatingPawnMovementComp->MaxSpeed = 4000.0f;
 			BoostDuration = 0.f;
 		}
+	}
+
+	if (FinishLineCrossed == 3)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Race finished."));
+		GEngine->AddOnScreenDebugMessage(-1, 12.f, FColor::Red, FString::Printf(TEXT("You won the race!")));
 	}
 	
 }
@@ -118,6 +135,14 @@ void APlayerPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	PlayerInputComponent->BindAction("BoostPower", EInputEvent::IE_Pressed, this, &APlayerPawn::BoostActivation);
 	PlayerInputComponent->BindAction("Shoot", EInputEvent::IE_Pressed, this, &APlayerPawn::Shoot);
 
+}
+
+void APlayerPawn::OnStartTimerComplete()
+{
+	APlayerController* PlayerController = GetWorld()->GetFirstLocalPlayerFromController()->GetPlayerController(GetWorld());
+	FInputModeGameAndUI InputMode{};
+	PlayerController->SetInputMode(InputMode);
+	gameHasStarted = true;
 }
 
 
@@ -191,20 +216,20 @@ void APlayerPawn::BoostActivation() {
 // Shooting
 
 void APlayerPawn::Shoot() {
-	if (BoostActivated == false)
-	{
-		UWorld* World = GetWorld();
-		if (World)
+		if (UGameplayStatics::GetCurrentLevelName(GetWorld()) == "ShootingLevel" && BoostActivated == false)
 		{
-			FVector Location = GetActorLocation();
-			World->SpawnActor<AActor>(BulletActorConnectionBP, Location + FVector(50.f, 0.f, 0.f), GetActorRotation());
-			UGameplayStatics::PlaySound2D(World, ShootingSound, 1.f, 1.f, 0.f, 0);
+			UWorld* World = GetWorld();
+			if (World)
+			{
+				FVector Location = GetActorLocation();
+				World->SpawnActor<AActor>(BulletActorConnectionBP, Location + FVector(50.f, 0.f, 0.f), GetActorRotation());
+				UGameplayStatics::PlaySound2D(World, ShootingSound, 1.f, 1.f, 0.f, 0);
 
+			}
+
+			UE_LOG(LogTemp, Warning, TEXT("Shooting"));
 		}
-
-		UE_LOG(LogTemp, Warning, TEXT("Shooting"));
-	}
-		
+	
 }
 
 
@@ -236,28 +261,11 @@ int APlayerPawn::RetBoost()
 void APlayerPawn::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent,
 	int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	//if (OtherActor->IsA(AAmmoCrate::StaticClass()))
-	//{
-	//	Cast<AAmmoCrate>(OtherActor)->ImHit();
-
-	//	Ammo = 30;
-	//	SpawnCrate = true;
-	//	UWorld* NewWorld = GetWorld();
-	//	UGameplayStatics::PlaySound2D(NewWorld, ReloadingSound, 1.f, 1.f, 0.f, 0);
-	//}
-
-	//if (OtherActor->IsA(AEnemy::StaticClass()))
-	//{
-	//	UE_LOG(LogTemp, Warning, TEXT("Ship hit enemy"));
-	//	GEngine->AddOnScreenDebugMessage(-1, 12.f, FColor::Red, FString::Printf(TEXT("You were defeated by the invaders. Game over!"), Ammo));
-	//	bEnemyDied = true;
-	//	this->SetActorHiddenInGame(true);
-	//	UGameplayStatics::SetGamePaused(GetWorld(), true);
-	//}
 	if (OtherActor->IsA(ATrackActor::StaticClass()))
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Ship hit the track."));
 		GEngine->AddOnScreenDebugMessage(-1, 12.f, FColor::Red, FString::Printf(TEXT("You crashed into the track!")));
 		this->Destroy();
 	}
+
 }
