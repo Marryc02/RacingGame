@@ -191,6 +191,8 @@ void APlayerPawn::BoostActivation() {
 // Shooting
 
 void APlayerPawn::Shoot() {
+	if (BoostActivated == false)
+	{
 		UWorld* World = GetWorld();
 		if (World)
 		{
@@ -200,8 +202,9 @@ void APlayerPawn::Shoot() {
 
 		}
 
-	UE_LOG(LogTemp, Warning, TEXT("Shooting"));
-
+		UE_LOG(LogTemp, Warning, TEXT("Shooting"));
+	}
+		
 }
 
 
