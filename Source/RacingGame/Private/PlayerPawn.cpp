@@ -76,8 +76,6 @@ void APlayerPawn::BeginPlay()
 		UE_LOG(LogTemp, Warning, TEXT("CollisionBox not found!"));
 	}
 
-	FloatingPawnMovementComp->MaxSpeed = 3000.0f;
-
 }
 
 // Called every frame
@@ -162,7 +160,7 @@ void APlayerPawn::SwitchPerspective() {
 // Movement
 
 void APlayerPawn::StartAirBrakes() {
-	FloatingPawnMovementComp->MaxSpeed = 3000.0f;
+	FloatingPawnMovementComp->MaxSpeed = 2500.0f;
 }
 
 void APlayerPawn::StopAirBrakes() {

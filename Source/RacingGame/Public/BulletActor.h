@@ -32,10 +32,10 @@ public:
 private:
 
 	UPROPERTY(EditAnywhere, Category = "BulletThings")
-		float Speed = 3000.f;
+		float Speed = 5000.0f;
 
 	UPROPERTY(EditAnywhere, Category = "BulletThings")
-		float TimeBeforeDestroy = 30.f;
+		float TimeBeforeDestroy = 30.0f;
 
 	UPROPERTY(EditAnywhere, Category = "BulletThings")
 		float TimeLived = 0.f;
