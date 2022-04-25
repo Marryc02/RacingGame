@@ -90,6 +90,7 @@ void APlayerPawn::Tick(float DeltaTime)
 	if (BoostActivated == true)
 	{
 		BoostDuration += DeltaTime;
+		BoostLeft = 6.f - BoostDuration;
 		if (BoostDuration > BoostLimit)
 		{
 			BoostActivated = false;
@@ -201,6 +202,29 @@ void APlayerPawn::Shoot() {
 
 	UE_LOG(LogTemp, Warning, TEXT("Shooting"));
 
+}
+
+
+// Return varibles
+
+int APlayerPawn::RetMaxHealth()
+{
+	return MaxHealth;
+}
+
+int APlayerPawn::RetHealth()
+{
+	return Health;
+}
+
+int APlayerPawn::RetMaxBoost()
+{
+	return BoostLimit;
+}
+
+int APlayerPawn::RetBoost()
+{
+	return BoostLeft;
 }
 
 

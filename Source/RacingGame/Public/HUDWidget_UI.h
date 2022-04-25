@@ -30,9 +30,6 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI", meta = (BindWidget))
 	class UProgressBar* BoostBar;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI", meta = (BindWidget))
-	class UTextBlock* AmmoNO;
-
 public:
 	void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 

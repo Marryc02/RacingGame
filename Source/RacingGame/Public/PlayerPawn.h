@@ -70,6 +70,19 @@ public:
 	UPROPERTY(EditAnywhere, Category = "BoostTime")
 		float BoostDuration = 0.f;
 
+	UPROPERTY(EditAnywhere, Category = "BoostTime")
+		float BoostLeft = 5.f;
+
+
+	// Health
+
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerMesh")
+		int Health = 5;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerMesh")
+		int MaxHealth = 5;
+
 
 	// Shooting
 
@@ -79,6 +92,20 @@ public:
 
 	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
 		TSubclassOf<AActor> BulletActorConnectionBP;
+
+
+	// Return varibles
+
+
+	UFUNCTION(BlueprintCallable)
+		int RetMaxHealth();
+	UFUNCTION(BlueprintCallable)
+		int RetHealth();
+
+	UFUNCTION(BlueprintCallable)
+		int RetMaxBoost();
+	UFUNCTION(BlueprintCallable)
+		int RetBoost();
 
 
 private:

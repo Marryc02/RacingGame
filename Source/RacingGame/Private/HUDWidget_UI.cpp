@@ -33,11 +33,6 @@ void UHUDWidget_UI::NativeTick(const FGeometry& MyGeometry, float InDeltaTime) {
 		}
 
 		BoostBar->SetPercent(BoostBarPercent);
-
-
-		// Ammo
-
-		AmmoNO->SetText(FText::AsNumber(PlayerPawnPtrs->RetAmmo()));
 	}
 
 }
