@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
+#include "Public/PlayerPawn.h"
 #include "RacingGameGameModeBase.generated.h"
 
 /**
@@ -20,7 +21,23 @@ public:
 	virtual void BeginPlay() override;
 
 	virtual void Tick(float DeltaTime) override;
-	
+
+	// Timer
+
+	FTimerHandle StartTimer;
+
+	UFUNCTION()
+		void OnStartTimerComplete();
+
+	bool gameHasStarted = false;
+
+	// RaceTime
+
+	float RaceTime;
+
+	UFUNCTION(BlueprintCallable)
+	float RetRaceTime();
+
 private:
 
 

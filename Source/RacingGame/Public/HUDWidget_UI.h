@@ -21,6 +21,7 @@ class RACINGGAME_API UHUDWidget_UI : public UUserWidget
 public:
 
 	APlayerPawn* PlayerPawnPtrs = Cast<APlayerPawn>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
+	ARacingGameGameModeBase* GameModeBasePtrs = Cast<ARacingGameGameModeBase>(UGameplayStatics::GetGameMode(GetWorld()));
 
 protected:
 
@@ -30,7 +31,15 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI", meta = (BindWidget))
 	class UProgressBar* BoostBar;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI", meta = (BindWidget))
+	class UTextBlock* Laps;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI", meta = (BindWidget))
+	class UTextBlock* Time;
+
 public:
 	void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
+
+	FText GetTimeTextFromFloat(float RaceTime);
 
 };

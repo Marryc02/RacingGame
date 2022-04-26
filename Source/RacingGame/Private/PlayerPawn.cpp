@@ -9,6 +9,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "TrackActor.h"
 #include "StartLineActor.h"
+#include "HUDWidget_UI.h"
 
 // Sets default values
 APlayerPawn::APlayerPawn()
@@ -84,6 +85,19 @@ void APlayerPawn::BeginPlay()
 		UE_LOG(LogTemp, Warning, TEXT("CollisionBox not found!"));
 	}
 
+
+	// Widget
+
+	UHUDWidget_UI* HUDWidget = CreateWidget<UHUDWidget_UI>(PlayerController, HUDWidgetClass.Get());
+	if (HUDWidget)
+	{
+		HUDWidget->AddToViewport();
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("HUDWidget not found!"));
+	}
+
 }
 
 // Called every frame
@@ -112,8 +126,10 @@ void APlayerPawn::Tick(float DeltaTime)
 
 	if (FinishLineCrossed == 3)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Race finished."));
-		GEngine->AddOnScreenDebugMessage(-1, 12.f, FColor::Red, FString::Printf(TEXT("You won the race!")));
+		bRaceFinished = true;
+
+		FinishLineCrossed = 0;
+		GetWorld()->GetTimerManager().SetTimer(StartTimer, this, &APlayerPawn::CreateEndGameWidget, 1.5f, false);
 	}
 	
 }
@@ -147,6 +163,15 @@ void APlayerPawn::OnStartTimerComplete()
 
 
 // Other
+
+void APlayerPawn::CreateEndGameWidget()
+{
+	if (bRaceFinished)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 12.f, FColor::Red, FString::Printf(TEXT("You have won the race!")));
+		bRaceFinished = false;
+	}
+}
 
 void APlayerPawn::PauseGame() {
 	if (isPaused == false)
@@ -256,6 +281,11 @@ int APlayerPawn::RetBoost()
 	return BoostLeft;
 }
 
+int APlayerPawn::RetLaps()
+{
+	return FinishLineCrossed;
+}
+
 
 // Collision
 
@@ -266,7 +296,11 @@ void APlayerPawn::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* Ot
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Ship hit the track."));
 		GEngine->AddOnScreenDebugMessage(-1, 12.f, FColor::Red, FString::Printf(TEXT("You crashed into the track!")));
+<<<<<<< Updated upstream
 		/*UGameplayStatics::PlaySound2D(World, DeathSound, 1.f, 1.f, 0.f, 0);*/
+=======
+		Health = 0.f;
+>>>>>>> Stashed changes
 		this->Destroy();
 	}
 

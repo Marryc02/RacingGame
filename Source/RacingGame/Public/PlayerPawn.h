@@ -5,6 +5,9 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
 #include "Kismet/GameplayStatics.h"
+#include "Blueprint/UserWidget.h"
+#include "../RacingGameGameModeBase.h"
+#include "RacingGameClasses.h"
 #include "PlayerPawn.generated.h"
 
 UCLASS()
@@ -29,6 +32,7 @@ public:
 
 
 	// On startup
+	
 	
 	FTimerHandle StartTimer;
 
@@ -81,6 +85,14 @@ public:
 		float BoostLeft = 5.f;
 
 
+	// Widget
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
+		TSubclassOf<UUserWidget> HUDWidgetClass;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
+		bool bRaceFinished = false;
+
 	// Health
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerMesh")
@@ -111,10 +123,17 @@ public:
 	UFUNCTION(BlueprintCallable)
 		int RetBoost();
 
+	UFUNCTION(BlueprintCallable)
+		int RetLaps();
+
 
 	// Start line and checkpoints
 
-	int FinishLineCrossed = 0;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerMesh")
+		int FinishLineCrossed = 0;
+
+	UFUNCTION(BlueprintCallable)
+		void CreateEndGameWidget();
 
 
 	// Audio

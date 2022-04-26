@@ -33,6 +33,27 @@ void UHUDWidget_UI::NativeTick(const FGeometry& MyGeometry, float InDeltaTime) {
 		}
 
 		BoostBar->SetPercent(BoostBarPercent);
+
+
+		// Laps
+
+		Laps->SetText(FText::AsNumber(PlayerPawnPtrs->RetLaps()));
+
+
+		// Time
+
+		float RaceTime = (float)GameModeBasePtrs->RetRaceTime();
+		Time->SetText(GetTimeTextFromFloat(RaceTime));
 	}
 
+}
+
+FText UHUDWidget_UI::GetTimeTextFromFloat(float RaceTime)
+{
+	int32 Minutes = FMath::FloorToInt(RaceTime / 60);
+	int32 Seconds = FMath::FloorToInt(FMath::Fmod(RaceTime, 60.f));
+	int32 CentiSeconds = FMath::FloorToInt((FMath::Fmod(RaceTime, 60.f) - Seconds) * 100);
+	FString	TimeString{ FString::Printf(TEXT("%02d:%02d:%02d"), Minutes, Seconds, CentiSeconds) };
+
+	return FText::FromString(TimeString);
 }

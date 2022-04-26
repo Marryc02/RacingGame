@@ -11,11 +11,29 @@ ARacingGameGameModeBase::ARacingGameGameModeBase()
 
 void ARacingGameGameModeBase::BeginPlay()
 {
-
+	GetWorld()->GetTimerManager().SetTimer(StartTimer, this, &ARacingGameGameModeBase::OnStartTimerComplete, 3.f, false);
 }
 
 void ARacingGameGameModeBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if (gameHasStarted)
+	{
+		RaceTime += DeltaTime;
+	}
+
+}
+
+void ARacingGameGameModeBase::OnStartTimerComplete()
+{
+	APlayerController* PlayerController = GetWorld()->GetFirstLocalPlayerFromController()->GetPlayerController(GetWorld());
+	FInputModeGameAndUI InputMode{};
+	PlayerController->SetInputMode(InputMode);
+	gameHasStarted = true;
+}
+
+float ARacingGameGameModeBase::RetRaceTime()
+{
+	return RaceTime;
 }

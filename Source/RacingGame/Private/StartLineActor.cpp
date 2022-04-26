@@ -60,7 +60,13 @@ void AStartLineActor::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor
 		startLineHidden = true;
 		PlayerPawnPtr->FinishLineCrossed += 1;
 
-		GEngine->AddOnScreenDebugMessage(-1, 12.f, FColor::Red, FString::Printf(TEXT("Player crossed the starting line!")));
+		if (PlayerPawnPtr->FinishLineCrossed < 3) {
+			GEngine->AddOnScreenDebugMessage(-1, 12.f, FColor::Red, FString::Printf(TEXT("Player crossed the starting line!")));
+		}
+		else if (PlayerPawnPtr->FinishLineCrossed == 3) {
+			UE_LOG(LogTemp, Warning, TEXT("Race finished."));
+			GEngine->AddOnScreenDebugMessage(-1, 12.f, FColor::Red, FString::Printf(TEXT("You won the race!")));
+		}
 	}
 
 }
