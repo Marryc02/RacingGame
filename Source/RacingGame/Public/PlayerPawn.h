@@ -117,6 +117,18 @@ public:
 	int FinishLineCrossed = 0;
 
 
+	// Audio
+
+	/*UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerAudio")
+		USoundBase* ShootingSound = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerAudio")
+		USoundBase* DeathSound = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerAudio")
+		USoundBase* BoostSound = nullptr;*/
+
+
 private:
 
 	bool isPaused = false;

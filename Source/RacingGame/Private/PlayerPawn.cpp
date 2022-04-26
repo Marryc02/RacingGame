@@ -208,6 +208,7 @@ void APlayerPawn::BoostActivation() {
 	if (BoostActivated == false)
 	{
 		FloatingPawnMovementComp->MaxSpeed = 8000.0f;
+		/*UGameplayStatics::PlaySound2D(World, BoostSound, 1.f, 1.f, 0.f, 0);*/
 		BoostActivated = true;
 	}
 }
@@ -223,7 +224,7 @@ void APlayerPawn::Shoot() {
 			{
 				FVector Location = GetActorLocation();
 				World->SpawnActor<AActor>(BulletActorConnectionBP, Location + FVector(50.f, 0.f, 0.f), GetActorRotation());
-				UGameplayStatics::PlaySound2D(World, ShootingSound, 1.f, 1.f, 0.f, 0);
+				/*UGameplayStatics::PlaySound2D(World, ShootingSound, 1.f, 1.f, 0.f, 0);*/
 
 			}
 
@@ -265,6 +266,7 @@ void APlayerPawn::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* Ot
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Ship hit the track."));
 		GEngine->AddOnScreenDebugMessage(-1, 12.f, FColor::Red, FString::Printf(TEXT("You crashed into the track!")));
+		/*UGameplayStatics::PlaySound2D(World, DeathSound, 1.f, 1.f, 0.f, 0);*/
 		this->Destroy();
 	}
 
