@@ -76,13 +76,13 @@ public:
 		class UFloatingPawnMovement* FloatingPawnMovementComp = nullptr;
 
 	UPROPERTY(EditAnywhere, Category = "BoostTime")
-		float BoostLimit = 5.f;
+		float BoostLimit = 10.f;
 
 	UPROPERTY(EditAnywhere, Category = "BoostTime")
 		float BoostDuration = 0.f;
 
 	UPROPERTY(EditAnywhere, Category = "BoostTime")
-		float BoostLeft = 5.f;
+		float BoostLeft = 10.f;
 
 
 	// Widget

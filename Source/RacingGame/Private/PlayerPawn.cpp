@@ -119,7 +119,7 @@ void APlayerPawn::Tick(float DeltaTime)
 		if (BoostDuration > BoostLimit)
 		{
 			BoostActivated = false;
-			FloatingPawnMovementComp->MaxSpeed = 4000.0f;
+			FloatingPawnMovementComp->MaxSpeed = 6000.0f;
 			BoostDuration = 0.f;
 		}
 	}
@@ -159,6 +159,7 @@ void APlayerPawn::OnStartTimerComplete()
 	FInputModeGameAndUI InputMode{};
 	PlayerController->SetInputMode(InputMode);
 	gameHasStarted = true;
+	FloatingPawnMovementComp->MaxSpeed = 6000.0f;
 }
 
 
@@ -211,11 +212,11 @@ void APlayerPawn::SwitchPerspective() {
 // Movement
 
 void APlayerPawn::StartAirBrakes() {
-	FloatingPawnMovementComp->MaxSpeed = 2500.0f;
+	FloatingPawnMovementComp->MaxSpeed = 3000.0f;
 }
 
 void APlayerPawn::StopAirBrakes() {
-	FloatingPawnMovementComp->MaxSpeed = 4000.0f;
+	FloatingPawnMovementComp->MaxSpeed = 6000.0f;
 }
 
 void APlayerPawn::MoveLeftRight(float Value) {
@@ -232,7 +233,7 @@ void APlayerPawn::MoveUpDown(float Value) {
 void APlayerPawn::BoostActivation() {
 	if (BoostActivated == false)
 	{
-		FloatingPawnMovementComp->MaxSpeed = 8000.0f;
+		FloatingPawnMovementComp->MaxSpeed = 10000.0f;
 		/*UGameplayStatics::PlaySound2D(World, BoostSound, 1.f, 1.f, 0.f, 0);*/
 		BoostActivated = true;
 	}
