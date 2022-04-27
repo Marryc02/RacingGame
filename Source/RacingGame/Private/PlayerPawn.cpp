@@ -296,11 +296,8 @@ void APlayerPawn::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* Ot
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Ship hit the track."));
 		GEngine->AddOnScreenDebugMessage(-1, 12.f, FColor::Red, FString::Printf(TEXT("You crashed into the track!")));
-<<<<<<< Updated upstream
 		/*UGameplayStatics::PlaySound2D(World, DeathSound, 1.f, 1.f, 0.f, 0);*/
-=======
 		Health = 0.f;
->>>>>>> Stashed changes
 		this->Destroy();
 	}
 
