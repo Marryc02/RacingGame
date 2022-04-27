@@ -65,6 +65,7 @@ void AStartLineActor::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor
 		}
 		else if (PlayerPawnPtr->FinishLineCrossed == 3) {
 			UE_LOG(LogTemp, Warning, TEXT("Race finished."));
+			PlayerPawnPtr->CreateEndGameWidget();
 			GEngine->AddOnScreenDebugMessage(-1, 12.f, FColor::Red, FString::Printf(TEXT("You won the race!")));
 		}
 	}

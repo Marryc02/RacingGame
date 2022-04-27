@@ -33,6 +33,7 @@ public:
 
 	// On startup
 	
+	class ARacingGameGameModeBase* GameModeBasePtrs = Cast<ARacingGameGameModeBase>(UGameplayStatics::GetGameMode(GetWorld()));
 	
 	FTimerHandle StartTimer;
 
@@ -104,12 +105,17 @@ public:
 
 	// Shooting
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerMesh")
-		USoundBase* ShootingSound = nullptr;
-
 	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
 		TSubclassOf<AActor> BulletActorConnectionBP;
 
+
+	// Widget
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
+		TSubclassOf<UUserWidget> EndGameWidgetClass;
+
+	UFUNCTION(BlueprintCallable)
+		void CreateEndGameWidget();
 
 	// Return varibles
 
@@ -132,20 +138,17 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerMesh")
 		int FinishLineCrossed = 0;
 
-	UFUNCTION(BlueprintCallable)
-		void CreateEndGameWidget();
-
 
 	// Audio
 
-	/*UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerAudio")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerAudio")
 		USoundBase* ShootingSound = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerAudio")
 		USoundBase* DeathSound = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerAudio")
-		USoundBase* BoostSound = nullptr;*/
+		USoundBase* BoostSound = nullptr;
 
 
 private:

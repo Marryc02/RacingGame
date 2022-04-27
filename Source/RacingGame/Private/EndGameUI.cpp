@@ -9,11 +9,8 @@ void UEndGameUI::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 {
 	Super::NativeTick(MyGeometry, InDeltaTime);
 
-	if (PlayerPawnPtrs->RetLaps() == 3)
-	{
-		float FinalRaceTime = (float)GameModeBasePtrs->RaceTime;
-		FinalTime->SetText(GetFinalTimeTextFromFloat(FinalRaceTime));
-	}
+	float FinalRaceTime = (float)GameModeBasePtrs->FinalRaceTime;
+	FinalTime->SetText(GetFinalTimeTextFromFloat(FinalRaceTime));
 
 }
 

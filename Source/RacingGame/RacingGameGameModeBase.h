@@ -4,7 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
-#include "Public/PlayerPawn.h"
+//#include "Public/PlayerPawn.h"
+#include "RacingGameClasses.h"
+#include "Kismet/GameplayStatics.h"
 #include "RacingGameGameModeBase.generated.h"
 
 /**
@@ -22,6 +24,9 @@ public:
 
 	virtual void Tick(float DeltaTime) override;
 
+
+	/*class APlayerPawn* PlayerPawnPtrs = Cast<APlayerPawn>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));*/
+
 	// Timer
 
 	FTimerHandle StartTimer;
@@ -34,9 +39,22 @@ public:
 	// RaceTime
 
 	float RaceTime;
+	float FinalRaceTime = 0.0f;
 
 	UFUNCTION(BlueprintCallable)
 	float RetRaceTime();
+
+	UFUNCTION(BlueprintCallable)
+	float RetFinalRaceTime();
+
+	/*UFUNCTION(BlueprintCallable)
+		void CreateEndGameWidget();*/
+
+
+	// Widget
+
+	/*UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
+		TSubclassOf<UUserWidget> EndGameWidgetClass;*/
 
 private:
 

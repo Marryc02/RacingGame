@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "PlayerPawn.h"
 #include "Kismet/GameplayStatics.h"
 #include "../RacingGameGameModeBase.h"
 #include "EndGameUI.generated.h"
@@ -21,7 +20,6 @@ public:
 
 	// Cast
 
-	APlayerPawn* PlayerPawnPtrs = Cast<APlayerPawn>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
 	ARacingGameGameModeBase* GameModeBasePtrs = Cast<ARacingGameGameModeBase>(UGameplayStatics::GetGameMode(GetWorld()));
 
 

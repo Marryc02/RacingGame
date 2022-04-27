@@ -2,6 +2,7 @@
 
 
 #include "RacingGameGameModeBase.h"
+#include "Public/EndGameUI.h"
 
 ARacingGameGameModeBase::ARacingGameGameModeBase()
 {
@@ -12,6 +13,7 @@ ARacingGameGameModeBase::ARacingGameGameModeBase()
 void ARacingGameGameModeBase::BeginPlay()
 {
 	GetWorld()->GetTimerManager().SetTimer(StartTimer, this, &ARacingGameGameModeBase::OnStartTimerComplete, 3.f, false);
+
 }
 
 void ARacingGameGameModeBase::Tick(float DeltaTime)
@@ -22,6 +24,10 @@ void ARacingGameGameModeBase::Tick(float DeltaTime)
 	{
 		RaceTime += DeltaTime;
 	}
+
+
+	FinalRaceTime = RaceTime;
+
 
 }
 
@@ -37,3 +43,21 @@ float ARacingGameGameModeBase::RetRaceTime()
 {
 	return RaceTime;
 }
+
+float ARacingGameGameModeBase::RetFinalRaceTime()
+{
+	return FinalRaceTime;
+}
+
+//void ARacingGameGameModeBase::CreateEndGameWidget()
+//{
+//	APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
+//	if (PlayerController)
+//	{
+//		UEndGameUI* EndGameWidget = CreateWidget<UEndGameUI>(PlayerController, EndGameWidgetClass.Get());
+//		PlayerController->SetShowMouseCursor(true);
+//		FInputModeUIOnly InputMode{};
+//		InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::LockAlways);
+//		PlayerController->SetInputMode(InputMode);
+//	}
+//}

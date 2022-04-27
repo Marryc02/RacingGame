@@ -10,6 +10,7 @@
 #include "TrackActor.h"
 #include "StartLineActor.h"
 #include "HUDWidget_UI.h"
+#include "EndGameUI.h"
 
 // Sets default values
 APlayerPawn::APlayerPawn()
@@ -76,6 +77,8 @@ void APlayerPawn::BeginPlay()
 
 	GetWorld()->GetTimerManager().SetTimer(StartTimer, this, &APlayerPawn::OnStartTimerComplete, 3.f, false);
 
+	FinishLineCrossed = 0;
+
 	if (CollisionBox)
 	{
 		CollisionBox->OnComponentBeginOverlap.AddDynamic(this, &APlayerPawn::OnOverlap);
@@ -123,14 +126,6 @@ void APlayerPawn::Tick(float DeltaTime)
 			BoostDuration = 0.f;
 		}
 	}
-
-	if (FinishLineCrossed == 3)
-	{
-		bRaceFinished = true;
-
-		FinishLineCrossed = 0;
-		GetWorld()->GetTimerManager().SetTimer(StartTimer, this, &APlayerPawn::CreateEndGameWidget, 1.5f, false);
-	}
 	
 }
 
@@ -164,15 +159,6 @@ void APlayerPawn::OnStartTimerComplete()
 
 
 // Other
-
-void APlayerPawn::CreateEndGameWidget()
-{
-	if (bRaceFinished)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 12.f, FColor::Red, FString::Printf(TEXT("You have won the race!")));
-		bRaceFinished = false;
-	}
-}
 
 void APlayerPawn::PauseGame() {
 	if (isPaused == false)
@@ -233,9 +219,13 @@ void APlayerPawn::MoveUpDown(float Value) {
 void APlayerPawn::BoostActivation() {
 	if (BoostActivated == false)
 	{
-		FloatingPawnMovementComp->MaxSpeed = 10000.0f;
-		/*UGameplayStatics::PlaySound2D(World, BoostSound, 1.f, 1.f, 0.f, 0);*/
-		BoostActivated = true;
+		UWorld* World = GetWorld();
+		if (World)
+		{
+			FloatingPawnMovementComp->MaxSpeed = 10000.0f;
+			UGameplayStatics::PlaySound2D(World, BoostSound, 1.f, 1.f, 0.f, 0);
+			BoostActivated = true;
+		}
 	}
 }
 
@@ -250,7 +240,7 @@ void APlayerPawn::Shoot() {
 			{
 				FVector Location = GetActorLocation();
 				World->SpawnActor<AActor>(BulletActorConnectionBP, Location + FVector(50.f, 0.f, 0.f), GetActorRotation());
-				/*UGameplayStatics::PlaySound2D(World, ShootingSound, 1.f, 1.f, 0.f, 0);*/
+				UGameplayStatics::PlaySound2D(World, ShootingSound, 1.f, 1.f, 0.f, 0);
 
 			}
 
@@ -261,6 +251,40 @@ void APlayerPawn::Shoot() {
 
 
 // Return varibles
+
+void APlayerPawn::CreateEndGameWidget()
+{
+	APlayerController* PlayerController = GetWorld()->GetFirstLocalPlayerFromController()->GetPlayerController(GetWorld());
+	if (PlayerController)
+	{
+		float FinalRaceTime = (float)GameModeBasePtrs->FinalRaceTime;
+		UE_LOG(LogTemp, Warning, TEXT("Final Race Time: , %f"), FinalRaceTime);
+		UHUDWidget_UI* HUDWidget = CreateWidget<UHUDWidget_UI>(PlayerController, HUDWidgetClass.Get());
+		if (HUDWidget)
+		{
+			HUDWidget->SetVisibility(ESlateVisibility::Collapsed);
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("HUDWidget not found!"));
+		}
+
+		UEndGameUI* EndGameWidget = CreateWidget<UEndGameUI>(PlayerController, EndGameWidgetClass);
+		if (EndGameWidget)
+		{
+			EndGameWidget->AddToViewport();
+			PlayerController->SetShowMouseCursor(true);
+			FInputModeUIOnly InputMode{};
+			InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::LockAlways);
+			PlayerController->SetInputMode(InputMode);
+			UGameplayStatics::SetGamePaused(GetWorld(), true);
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("EndGameWidget not found!"));
+		}
+	}
+}
 
 int APlayerPawn::RetMaxHealth()
 {
@@ -295,11 +319,16 @@ void APlayerPawn::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* Ot
 {
 	if (OtherActor->IsA(ATrackActor::StaticClass()))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Ship hit the track."));
-		GEngine->AddOnScreenDebugMessage(-1, 12.f, FColor::Red, FString::Printf(TEXT("You crashed into the track!")));
-		/*UGameplayStatics::PlaySound2D(World, DeathSound, 1.f, 1.f, 0.f, 0);*/
-		Health = 0.f;
-		this->Destroy();
+		UWorld* World = GetWorld();
+		if (World)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Ship hit the track."));
+			GEngine->AddOnScreenDebugMessage(-1, 12.f, FColor::Red, FString::Printf(TEXT("You crashed into the track!")));
+			UGameplayStatics::PlaySound2D(World, DeathSound, 1.f, 1.f, 0.f, 0);
+			Health = 0.f;
+			CreateEndGameWidget();
+			this->Destroy();
+		}
 	}
 
 }
