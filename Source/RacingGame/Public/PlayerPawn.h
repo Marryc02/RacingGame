@@ -91,6 +91,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
 		TSubclassOf<UUserWidget> HUDWidgetClass;
 
+	class UHUDWidget_UI* HUDWidget;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
 		bool bRaceFinished = false;
 

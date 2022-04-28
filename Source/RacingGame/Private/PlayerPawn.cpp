@@ -91,7 +91,7 @@ void APlayerPawn::BeginPlay()
 
 	// Widget
 
-	UHUDWidget_UI* HUDWidget = CreateWidget<UHUDWidget_UI>(PlayerController, HUDWidgetClass.Get());
+	HUDWidget = CreateWidget<UHUDWidget_UI>(PlayerController, HUDWidgetClass.Get());
 	if (HUDWidget)
 	{
 		HUDWidget->AddToViewport();
@@ -259,9 +259,9 @@ void APlayerPawn::CreateEndGameWidget()
 	{
 		float FinalRaceTime = (float)GameModeBasePtrs->FinalRaceTime;
 		UE_LOG(LogTemp, Warning, TEXT("Final Race Time: , %f"), FinalRaceTime);
-		UHUDWidget_UI* HUDWidget = CreateWidget<UHUDWidget_UI>(PlayerController, HUDWidgetClass.Get());
 		if (HUDWidget)
 		{
+			UE_LOG(LogTemp, Warning, TEXT("HUDWidget collapsed"));
 			HUDWidget->SetVisibility(ESlateVisibility::Collapsed);
 		}
 		else
