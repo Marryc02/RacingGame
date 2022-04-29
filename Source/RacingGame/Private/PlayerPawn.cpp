@@ -36,8 +36,9 @@ APlayerPawn::APlayerPawn()
 
 	SpringArm->SetRelativeRotation(FRotator(-25.f, 0.f, 0.f));
 	SpringArm->TargetArmLength = 600.f;
-	SpringArm->bEnableCameraLag = false;
-	SpringArm->CameraLagSpeed = 5.f;
+	SpringArm->bEnableCameraLag = true;
+	SpringArm->CameraLagSpeed = 0.1f;
+	SpringArm->CameraLagMaxDistance = 150.f;
 
 	SpringArm->SetupAttachment(CollisionBox);
 
@@ -322,11 +323,26 @@ void APlayerPawn::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* Ot
 		UWorld* World = GetWorld();
 		if (World)
 		{
+			// Debugging
+
 			UE_LOG(LogTemp, Warning, TEXT("Ship hit the track."));
 			GEngine->AddOnScreenDebugMessage(-1, 12.f, FColor::Red, FString::Printf(TEXT("You crashed into the track!")));
+
+			// Effects
+
+			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), PlayerExplosion, GetTransform(), true);
 			UGameplayStatics::PlaySound2D(World, DeathSound, 1.f, 1.f, 0.f, 0);
+
+			// Extra
+
 			Health = 0.f;
+
+			// Widget
+
 			CreateEndGameWidget();
+
+			// Player Destroy
+
 			this->Destroy();
 		}
 	}

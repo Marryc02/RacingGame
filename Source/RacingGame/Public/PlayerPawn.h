@@ -153,6 +153,12 @@ public:
 		USoundBase* BoostSound = nullptr;
 
 
+	// Effects
+
+	UPROPERTY(EditAnywhere, Category = "PlayerEffects")
+		UParticleSystem* PlayerExplosion = nullptr;
+
+
 private:
 
 	bool isPaused = false;
