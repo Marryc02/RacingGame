@@ -85,6 +85,8 @@ public:
 	UPROPERTY(EditAnywhere, Category = "BoostTime")
 		float BoostLeft = 10.f;
 
+	bool boostAvailable = false;
+
 
 	// Widget
 
@@ -139,6 +141,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerMesh")
 		int FinishLineCrossed = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerMesh")
+		int CheckpointsReached = 0;
 
 
 	// Audio

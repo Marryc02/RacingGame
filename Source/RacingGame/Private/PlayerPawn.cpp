@@ -218,7 +218,7 @@ void APlayerPawn::MoveUpDown(float Value) {
 }
 
 void APlayerPawn::BoostActivation() {
-	if (BoostActivated == false)
+	if (BoostActivated == false && boostAvailable == true)
 	{
 		UWorld* World = GetWorld();
 		if (World)
@@ -226,6 +226,7 @@ void APlayerPawn::BoostActivation() {
 			FloatingPawnMovementComp->MaxSpeed = 10000.0f;
 			UGameplayStatics::PlaySound2D(World, BoostSound, 1.f, 1.f, 0.f, 0);
 			BoostActivated = true;
+			boostAvailable = false;
 		}
 	}
 }
