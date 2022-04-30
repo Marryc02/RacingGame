@@ -11,7 +11,6 @@ AFuelActor::AFuelActor()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	CollisionBox = CreateDefaultSubobject<UBoxComponent>(TEXT("CollisionBox"));
-	/*CollisionBox->SetCollisionEnabled(ECollisionEnabled::QueryOnly);*/
 	SetRootComponent(CollisionBox);
 
 	PlayerMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PlayerMesh"));
@@ -61,6 +60,8 @@ void AFuelActor::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* Oth
 		fuelActorHidden = true;
 		SetActorHiddenInGame(true);
 		SetActorEnableCollision(false);
+
+		GEngine->AddOnScreenDebugMessage(-1, 12.f, FColor::Red, FString::Printf(TEXT("Player picked up fuel!")));
 	}
 
 }
