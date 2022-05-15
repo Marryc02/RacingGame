@@ -88,7 +88,7 @@ public:
 	bool boostAvailable = false;
 
 
-	// Widget
+	// HUD Widget
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
 		TSubclassOf<UUserWidget> HUDWidgetClass;
@@ -113,7 +113,7 @@ public:
 		TSubclassOf<AActor> BulletActorConnectionBP;
 
 
-	// Widget
+	// EndGame Widget
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
 		TSubclassOf<UUserWidget> EndGameWidgetClass;
