@@ -154,6 +154,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerAudio")
 		USoundBase* BoostSound = nullptr;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerAudio")
+		USoundBase* FuelPickUpSound = nullptr;
+
 
 	// Effects
 
