@@ -53,7 +53,7 @@ void AStartLineActor::Tick(float DeltaTime)
 void AStartLineActor::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent,
 	int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (OtherActor->IsA(APlayerPawn::StaticClass()) && startLineHidden == false /*&& CheckpointsReached = 3*/)
+	if (OtherActor->IsA(APlayerPawn::StaticClass()) && startLineHidden == false && CheckpointsReached == 3)
 	{
 		APlayerPawn* PlayerPawnPtr = Cast<APlayerPawn>(OtherActor);
 

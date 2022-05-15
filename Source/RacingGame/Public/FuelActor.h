@@ -6,16 +6,16 @@
 #include "GameFramework/Actor.h"
 #include "Kismet/GameplayStatics.h"
 #include "PlayerPawn.h"
-#include "StartLineActor.generated.h"
+#include "FuelActor.generated.h"
 
 UCLASS()
-class RACINGGAME_API AStartLineActor : public AActor
+class RACINGGAME_API AFuelActor : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	AStartLineActor();
+	AFuelActor();
 
 protected:
 	// Called when the game starts or when spawned
@@ -31,21 +31,17 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerMesh")
 		class UStaticMeshComponent* PlayerMesh = nullptr;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerMesh")
-		int CheckpointsReached = 0;
-
+	
 
 private:
 
-	bool startLineHidden = false;
+	bool fuelActorHidden = false;
 
 	float HideDuration = 0.f;
-	float HideLimit = 3.0f;
+	float HideLimit = 10.0f;
 
 
 	UFUNCTION()
 		void OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent,
 			int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
-
 };

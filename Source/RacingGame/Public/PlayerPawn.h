@@ -85,8 +85,10 @@ public:
 	UPROPERTY(EditAnywhere, Category = "BoostTime")
 		float BoostLeft = 10.f;
 
+	bool boostAvailable = false;
 
-	// Widget
+
+	// HUD Widget
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
 		TSubclassOf<UUserWidget> HUDWidgetClass;
@@ -111,7 +113,7 @@ public:
 		TSubclassOf<AActor> BulletActorConnectionBP;
 
 
-	// Widget
+	// EndGame Widget
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
 		TSubclassOf<UUserWidget> EndGameWidgetClass;
@@ -151,6 +153,15 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerAudio")
 		USoundBase* BoostSound = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerAudio")
+		USoundBase* FuelPickUpSound = nullptr;
+
+
+	// Effects
+
+	UPROPERTY(EditAnywhere, Category = "PlayerEffects")
+		UParticleSystem* PlayerExplosion = nullptr;
 
 
 private:
