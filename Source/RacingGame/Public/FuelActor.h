@@ -31,6 +31,12 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerMesh")
 		class UStaticMeshComponent* PlayerMesh = nullptr;
+
+
+	// Audio
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerAudio")
+		USoundBase* FuelPickUpSound = nullptr;
 	
 
 private:

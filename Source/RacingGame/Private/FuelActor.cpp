@@ -56,12 +56,17 @@ void AFuelActor::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* Oth
 	{
 		APlayerPawn* PlayerPawnPtr = Cast<APlayerPawn>(OtherActor);
 
-		PlayerPawnPtr->boostAvailable = true;
-		fuelActorHidden = true;
-		SetActorHiddenInGame(true);
-		SetActorEnableCollision(false);
+		UWorld* World = GetWorld();
+		if (World) {
 
-		GEngine->AddOnScreenDebugMessage(-1, 12.f, FColor::Red, FString::Printf(TEXT("Player picked up fuel!")));
+			PlayerPawnPtr->boostAvailable = true;
+			fuelActorHidden = true;
+			UGameplayStatics::PlaySound2D(World, FuelPickUpSound, 1.f, 1.f, 0.f, 0);
+			SetActorHiddenInGame(true);
+			SetActorEnableCollision(false);
+
+			GEngine->AddOnScreenDebugMessage(-1, 12.f, FColor::Red, FString::Printf(TEXT("Player picked up fuel!")));
+		}
 	}
 
 }
