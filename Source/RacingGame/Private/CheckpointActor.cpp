@@ -13,8 +13,6 @@ ACheckpointActor::ACheckpointActor()
 	CollisionBox = CreateDefaultSubobject<UBoxComponent>(TEXT("CollisionBox"));
 	SetRootComponent(CollisionBox);
 
-	PlayerMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PlayerMesh"));
-	PlayerMesh->SetupAttachment(GetRootComponent());
 }
 
 // Called when the game starts or when spawned

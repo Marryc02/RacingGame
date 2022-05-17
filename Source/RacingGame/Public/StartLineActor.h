@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Kismet/GameplayStatics.h"
-#include "PlayerPawn.h"
 #include "StartLineActor.generated.h"
 
 UCLASS()
@@ -28,9 +27,6 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerMesh")
 		class UShapeComponent* CollisionBox = nullptr;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerMesh")
-		class UStaticMeshComponent* PlayerMesh = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerMesh")
 		int CheckpointsReached = 0;

@@ -8,7 +8,13 @@
 #include "Camera/CameraComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "TrackActor.h"
+#include "TunnelActor.h"
 #include "StartLineActor.h"
+#include "StartLineIndicatorColliderActor.h"
+#include "CrystalActor.h"
+#include "RoofBorderActorOne.h"
+#include "RoofBorderActorTwo.h"
+#include "RegularBorderActor.h"
 #include "HUDWidget_UI.h"
 #include "EndGameUI.h"
 
@@ -319,7 +325,7 @@ int APlayerPawn::RetLaps()
 void APlayerPawn::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent,
 	int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (OtherActor->IsA(ATrackActor::StaticClass()))
+	if (OtherActor->IsA(ATrackActor::StaticClass()) || OtherActor->IsA(ATunnelActor::StaticClass()) || OtherActor->IsA(AStartLineIndicatorColliderActor::StaticClass()) || OtherActor->IsA(ACrystalActor::StaticClass()))
 	{
 		UWorld* World = GetWorld();
 		if (World)
@@ -348,6 +354,31 @@ void APlayerPawn::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* Ot
 		}
 	}
 
-	//if other actor is fuel (play fuel sound and fuel = "full")
+	else if (OtherActor->IsA(ARoofBorderActorOne::StaticClass()))
+	{
+		UWorld* World = GetWorld();
+		if (World)
+		{
+			//Gi advarsel om at spilleren nærmer seg en høyde hvor vindene blir farlige gjennom HUD-en
+		}
+	}
+
+	else if (OtherActor->IsA(ARoofBorderActorTwo::StaticClass()))
+	{
+		UWorld* World = GetWorld();
+		if (World)
+		{
+			this->Destroy();
+		}
+	}
+
+	else if (OtherActor->IsA(ARegularBorderActor::StaticClass()))
+	{
+		UWorld* World = GetWorld();
+		if (World)
+		{
+			this->Destroy();
+		}
+	}
 
 }

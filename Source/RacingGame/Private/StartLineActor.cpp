@@ -3,7 +3,7 @@
 
 #include "StartLineActor.h"
 #include "Components/BoxComponent.h"
-#include "Components/StaticMeshComponent.h"
+#include "PlayerPawn.h"
 
 // Sets default values
 AStartLineActor::AStartLineActor()
@@ -14,8 +14,6 @@ AStartLineActor::AStartLineActor()
 	/*CollisionBox->SetCollisionEnabled(ECollisionEnabled::QueryOnly);*/
 	SetRootComponent(CollisionBox);
 
-	PlayerMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PlayerMesh"));
-	PlayerMesh->SetupAttachment(GetRootComponent());
 }
 
 // Called when the game starts or when spawned
@@ -59,6 +57,7 @@ void AStartLineActor::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor
 
 		startLineHidden = true;
 		PlayerPawnPtr->FinishLineCrossed += 1;
+		CheckpointsReached = 0;
 
 		if (PlayerPawnPtr->FinishLineCrossed < 3) {
 			GEngine->AddOnScreenDebugMessage(-1, 12.f, FColor::Red, FString::Printf(TEXT("Player crossed the starting line!")));

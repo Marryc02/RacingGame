@@ -30,9 +30,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerMesh")
 		class UShapeComponent* CollisionBox = nullptr;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerMesh")
-		class UStaticMeshComponent* PlayerMesh = nullptr;
-
 
 private:
 
