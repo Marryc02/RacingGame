@@ -17,6 +17,7 @@
 #include "RegularBorderActor.h"
 #include "HUDWidget_UI.h"
 #include "EndGameUI.h"
+#include "BorderWarning_UI.h"
 
 // Sets default values
 APlayerPawn::APlayerPawn()
@@ -359,6 +360,15 @@ void APlayerPawn::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* Ot
 		UWorld* World = GetWorld();
 		if (World)
 		{
+			if (WarningWidget)
+			{
+				WarningWidget->AddToViewport();
+			}
+			else
+			{
+				UE_LOG(LogTemp, Warning, TEXT("WarningWidget not found!"));
+			}
+
 			//Gi advarsel om at spilleren nærmer seg en høyde hvor vindene blir farlige gjennom HUD-en
 		}
 	}
@@ -381,4 +391,16 @@ void APlayerPawn::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* Ot
 		}
 	}
 
+	else
+	{
+		if (WarningWidget)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("WarningWidget collapsed"));
+			WarningWidget->SetVisibility(ESlateVisibility::Collapsed);
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("WarningWidget not found!"));
+		}
+	}
 }

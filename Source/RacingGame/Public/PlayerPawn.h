@@ -98,6 +98,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
 		bool bRaceFinished = false;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
+		TSubclassOf<UUserWidget> WarningWidgetClass;
+
+	class UBorderWarning_UI* WarningWidget;
+
 	// Health
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerMesh")
