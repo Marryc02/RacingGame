@@ -22,6 +22,8 @@ void ATargetActor::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	InitialLocation = GetActorLocation();
+
 	if (CollisionBox)
 	{
 		CollisionBox->OnComponentBeginOverlap.AddDynamic(this, &ATargetActor::OnOverlap);
@@ -36,6 +38,33 @@ void ATargetActor::BeginPlay()
 void ATargetActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	if (moveDown == true)
+	{
+		FVector NewLocation = GetActorLocation();
+		NewLocation += (MoveDirection * Speed * DeltaTime);
+		SetActorLocation(NewLocation);
+
+		if (NewLocation.Z < InitialLocation.Z-5999.f)
+		{
+			MoveDirection = FVector(0.f, 0.f, 1.f);
+			moveDown = false;
+			UE_LOG(LogTemp, Warning, TEXT("Targets moving up."));
+		}
+	}
+	else if (moveDown == false)
+	{
+		FVector NewLocation = GetActorLocation();
+		NewLocation += (MoveDirection * Speed * DeltaTime);
+		SetActorLocation(NewLocation);
+
+		if (NewLocation.Z > InitialLocation.Z - 1.f)
+		{
+			MoveDirection = FVector(0.f, 0.f, -1.f);
+			moveDown = true;
+			UE_LOG(LogTemp, Warning, TEXT("Targets moving down."));
+		}
+	}
 
 }
 

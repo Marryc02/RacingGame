@@ -36,8 +36,21 @@ public:
 	UFUNCTION(BlueprintCallable)
 		int RetTargetsShot();
 
+	UPROPERTY(EditAnywhere, Category = "Movement")
+		float Speed = 1000.f;
+
+	UPROPERTY(EditAnywhere, Category = "Movement")
+		float BoostLeft = 10.f;
+
+	FVector InitialLocation;
 
 private:
+
+	FVector MoveDirection = FVector(0.f, 0.f, -1.f);
+
+	float moveDuration = 0.f;
+	bool moveDown = true;
+
 
 	int TargetsShot = 0;
 
