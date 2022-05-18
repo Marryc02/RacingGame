@@ -134,6 +134,17 @@ void APlayerPawn::Tick(float DeltaTime)
 			BoostDuration = 0.f;
 		}
 	}
+
+	if (RoofBorderTouched == true)
+	{
+		BorderSlowDuration += DeltaTime;
+		if (BorderSlowDuration > BorderSlowLimit)
+		{
+			RoofBorderTouched = false;
+			FloatingPawnMovementComp->MaxSpeed = 6000.0f;
+			BorderSlowDuration = 0.f;
+		}
+	}
 	
 }
 
@@ -326,7 +337,7 @@ int APlayerPawn::RetLaps()
 void APlayerPawn::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent,
 	int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (OtherActor->IsA(ATrackActor::StaticClass()) || OtherActor->IsA(ATunnelActor::StaticClass()) || OtherActor->IsA(AStartLineIndicatorColliderActor::StaticClass()) || OtherActor->IsA(ACrystalActor::StaticClass()))
+	if (OtherActor->IsA(ATrackActor::StaticClass()) || OtherActor->IsA(ATunnelActor::StaticClass()) || OtherActor->IsA(AStartLineIndicatorColliderActor::StaticClass()) || OtherActor->IsA(ACrystalActor::StaticClass()) || OtherActor->IsA(ARegularBorderActor::StaticClass()) || OtherActor->IsA(ARoofBorderActorTwo::StaticClass()))
 	{
 		UWorld* World = GetWorld();
 		if (World)
@@ -357,6 +368,10 @@ void APlayerPawn::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* Ot
 
 	else if (OtherActor->IsA(ARoofBorderActorOne::StaticClass()))
 	{
+		FloatingPawnMovementComp->MaxSpeed = 3000.0f;
+		RoofBorderTouched = true;
+		GEngine->AddOnScreenDebugMessage(-1, 12.f, FColor::Red, FString::Printf(TEXT("Player is nearing dangerous altitudes!")));
+
 		UWorld* World = GetWorld();
 		if (World)
 		{
@@ -370,24 +385,6 @@ void APlayerPawn::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* Ot
 			}
 
 			//Gi advarsel om at spilleren nærmer seg en høyde hvor vindene blir farlige gjennom HUD-en
-		}
-	}
-
-	else if (OtherActor->IsA(ARoofBorderActorTwo::StaticClass()))
-	{
-		UWorld* World = GetWorld();
-		if (World)
-		{
-			this->Destroy();
-		}
-	}
-
-	else if (OtherActor->IsA(ARegularBorderActor::StaticClass()))
-	{
-		UWorld* World = GetWorld();
-		if (World)
-		{
-			this->Destroy();
 		}
 	}
 

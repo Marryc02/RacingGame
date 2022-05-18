@@ -88,6 +88,17 @@ public:
 	bool boostAvailable = false;
 
 
+	// Border stuff
+
+	UPROPERTY(EditAnywhere, Category = "BoostTime")
+		float BorderSlowLimit = 5.f;
+
+	UPROPERTY(EditAnywhere, Category = "BoostTime")
+		float BorderSlowDuration = 0.f;
+
+	bool RoofBorderTouched = false;
+
+
 	// HUD Widget
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
