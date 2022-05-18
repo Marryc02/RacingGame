@@ -51,24 +51,26 @@ void AStartLineActor::Tick(float DeltaTime)
 void AStartLineActor::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent,
 	int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (OtherActor->IsA(APlayerPawn::StaticClass()) && startLineHidden == false && CheckpointsReached == 3)
+	if (OtherActor->IsA(APlayerPawn::StaticClass()) && startLineHidden == false)
 	{
 		APlayerPawn* PlayerPawnPtr = Cast<APlayerPawn>(OtherActor);
 
-		startLineHidden = true;
-		PlayerPawnPtr->FinishLineCrossed += 1;
-		CheckpointsReached = 0;
+		if (PlayerPawnPtr->CheckpointsReached == 3)
+		{
+			startLineHidden = true;
+			PlayerPawnPtr->FinishLineCrossed += 1;
+			PlayerPawnPtr->CheckpointsReached = 0;
 
-		if (PlayerPawnPtr->FinishLineCrossed < 3) {
-			GEngine->AddOnScreenDebugMessage(-1, 12.f, FColor::Red, FString::Printf(TEXT("Player crossed the starting line!")));
-		}
-		else if (PlayerPawnPtr->FinishLineCrossed == 3) {
-			UE_LOG(LogTemp, Warning, TEXT("Race finished."));
-			PlayerPawnPtr->CreateEndGameWidget();
-			GEngine->AddOnScreenDebugMessage(-1, 12.f, FColor::Red, FString::Printf(TEXT("You won the race!")));
+			if (PlayerPawnPtr->FinishLineCrossed < 3) {
+				GEngine->AddOnScreenDebugMessage(-1, 12.f, FColor::Red, FString::Printf(TEXT("Player crossed the starting line!")));
+			}
+			else if (PlayerPawnPtr->FinishLineCrossed == 3) {
+				UE_LOG(LogTemp, Warning, TEXT("Race finished."));
+				PlayerPawnPtr->CreateEndGameWidget();
+				GEngine->AddOnScreenDebugMessage(-1, 12.f, FColor::Red, FString::Printf(TEXT("You won the race!")));
+			}
 		}
 	}
-
 }
 
 

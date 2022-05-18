@@ -3,7 +3,8 @@
 
 #include "CheckpointActor.h"
 #include "Components/BoxComponent.h"
-#include "Components/StaticMeshComponent.h"
+#include "PlayerPawn.h"
+#include "StartLineActor.h"
 
 // Sets default values
 ACheckpointActor::ACheckpointActor()
@@ -20,14 +21,6 @@ void ACheckpointActor::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	if (CollisionBox)
-	{
-		CollisionBox->OnComponentBeginOverlap.AddDynamic(this, &ACheckpointActor::OnOverlap);
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("CollisionBox not found!"));
-	}
 }
 
 // Called every frame
@@ -37,26 +30,13 @@ void ACheckpointActor::Tick(float DeltaTime)
 
 	if (checkpointHidden == true)
 	{
+		ACheckpointActor::SetActorEnableCollision(false);
 		HideDuration += DeltaTime;
 		if (HideDuration > HideLimit)
 		{
 			checkpointHidden = false;
+			ACheckpointActor::SetActorEnableCollision(true);
 		}
 	}
-}
-
-void ACheckpointActor::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent,
-	int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
-{
-	if (OtherActor->IsA(APlayerPawn::StaticClass()) && checkpointHidden == false)
-	{
-		AStartLineActor* StartLinePtr = Cast<AStartLineActor>(OtherActor);
-
-		checkpointHidden = true;
-		StartLinePtr->CheckpointsReached += 1;
-
-		GEngine->AddOnScreenDebugMessage(-1, 12.f, FColor::Yellow, FString::Printf(TEXT("Player reached a checkpoint!")));
-	}
-
 }
 

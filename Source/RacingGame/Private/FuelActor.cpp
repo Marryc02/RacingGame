@@ -43,8 +43,8 @@ void AFuelActor::Tick(float DeltaTime)
 		if (HideDuration > HideLimit)
 		{
 			fuelActorHidden = false;
-			SetActorHiddenInGame(false);
-			SetActorEnableCollision(true);
+			AFuelActor::SetActorHiddenInGame(false);
+			AFuelActor::SetActorEnableCollision(true);
 		}
 	}
 }
@@ -62,8 +62,8 @@ void AFuelActor::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* Oth
 			PlayerPawnPtr->boostAvailable = true;
 			fuelActorHidden = true;
 			UGameplayStatics::PlaySound2D(World, FuelPickUpSound, 1.f, 1.f, 0.f, 0);
-			SetActorHiddenInGame(true);
-			SetActorEnableCollision(false);
+			AFuelActor::SetActorHiddenInGame(true);
+			AFuelActor::SetActorEnableCollision(false);
 
 			GEngine->AddOnScreenDebugMessage(-1, 12.f, FColor::Red, FString::Printf(TEXT("Player picked up fuel!")));
 		}

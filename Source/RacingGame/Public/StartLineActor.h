@@ -28,9 +28,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerMesh")
 		class UShapeComponent* CollisionBox = nullptr;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerMesh")
-		int CheckpointsReached = 0;
-
 
 private:
 

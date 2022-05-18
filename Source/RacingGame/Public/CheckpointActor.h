@@ -5,8 +5,6 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Kismet/GameplayStatics.h"
-#include "PlayerPawn.h"
-#include "StartLineActor.h"
 #include "CheckpointActor.generated.h"
 
 UCLASS()
@@ -30,16 +28,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerMesh")
 		class UShapeComponent* CollisionBox = nullptr;
 
-
-private:
-
 	bool checkpointHidden = false;
 
+
+private:
 	float HideDuration = 0.f;
 	float HideLimit = 30.0f;
-
-
-	UFUNCTION()
-		void OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent,
-			int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 };

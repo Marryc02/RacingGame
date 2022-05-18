@@ -156,6 +156,9 @@ public:
 	// Start line and checkpoints
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerMesh")
+		int CheckpointsReached = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerMesh")
 		int FinishLineCrossed = 0;
 
 

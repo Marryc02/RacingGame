@@ -15,6 +15,7 @@
 #include "RoofBorderActorOne.h"
 #include "RoofBorderActorTwo.h"
 #include "RegularBorderActor.h"
+#include "CheckpointActor.h"
 #include "HUDWidget_UI.h"
 #include "EndGameUI.h"
 #include "BorderWarning_UI.h"
@@ -342,31 +343,29 @@ void APlayerPawn::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* Ot
 		UWorld* World = GetWorld();
 		if (World)
 		{
-			// Debugging
-
 			UE_LOG(LogTemp, Warning, TEXT("Ship hit the track."));
 			GEngine->AddOnScreenDebugMessage(-1, 12.f, FColor::Red, FString::Printf(TEXT("You crashed into the track!")));
-
-			// Effects
 
 			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), PlayerExplosion, GetTransform(), true);
 			UGameplayStatics::PlaySound2D(World, DeathSound, 1.f, 1.f, 0.f, 0);
 
-			// Extra
-
 			Health = 0.f;
-
-			// Widget
-
 			CreateEndGameWidget();
-
-			// Player Destroy
-
 			this->Destroy();
 		}
 	}
 
-	else if (OtherActor->IsA(ARoofBorderActorOne::StaticClass()))
+	else if (OtherActor->IsA(ACheckpointActor::StaticClass()))
+	{
+		ACheckpointActor* CheckpointPtr = Cast<ACheckpointActor>(OtherActor);
+
+		CheckpointPtr->checkpointHidden = true;
+		CheckpointsReached += 1;
+
+		GEngine->AddOnScreenDebugMessage(-1, 12.f, FColor::Yellow, FString::Printf(TEXT("Player reached a checkpoint!")));
+	}
+
+	else if (OtherActor->IsA(ARoofBorderActorOne::StaticClass()) && RoofBorderTouched == false)
 	{
 		FloatingPawnMovementComp->MaxSpeed = 3000.0f;
 		RoofBorderTouched = true;
