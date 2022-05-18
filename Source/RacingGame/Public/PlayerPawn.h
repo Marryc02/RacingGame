@@ -88,6 +88,15 @@ public:
 	bool boostAvailable = false;
 
 
+	// Camera Modifiers
+
+	/*UPROPERTY(meta = (AllowPrivateAccess = "true"), EditAnywhere, Category = "CameraBoost")
+		TSubclassOf<UCameraModifier> BoostCameraModifierClass = nullptr;
+
+	UPROPERTY()
+		class UCameraModifier* BoostCameraModifier = nullptr;*/
+
+
 	// Border stuff
 
 	UPROPERTY(EditAnywhere, Category = "BoostTime")

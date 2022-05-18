@@ -6,6 +6,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/FloatingPawnMovement.h"
 #include "Camera/CameraComponent.h"
+//#include "Camera/CameraModifier.h"
 #include "Kismet/GameplayStatics.h"
 #include "TrackActor.h"
 #include "TunnelActor.h"
@@ -110,13 +111,18 @@ void APlayerPawn::BeginPlay()
 		UE_LOG(LogTemp, Warning, TEXT("HUDWidget not found!"));
 	}
 
+
+	// Camera Modifier
+
+	/*BoostCameraModifier = UGameplayStatics::GetPlayerCameraManager(this, 0)->AddNewCameraModifier(BoostCameraModifierClass);
+	BoostCameraModifier->EnableModifier();*/
+
 }
 
 // Called every frame
 void APlayerPawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 
 	if (gameHasStarted == true)
 	{
@@ -144,6 +150,9 @@ void APlayerPawn::Tick(float DeltaTime)
 			RoofBorderTouched = false;
 			FloatingPawnMovementComp->MaxSpeed = 6000.0f;
 			BorderSlowDuration = 0.f;
+
+			UE_LOG(LogTemp, Warning, TEXT("WarningWidget collapsed"));
+			WarningWidget->SetVisibility(ESlateVisibility::Collapsed);
 		}
 	}
 	
@@ -371,9 +380,12 @@ void APlayerPawn::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* Ot
 		RoofBorderTouched = true;
 		GEngine->AddOnScreenDebugMessage(-1, 12.f, FColor::Red, FString::Printf(TEXT("Player is nearing dangerous altitudes!")));
 
+		APlayerController* PlayerController = GetWorld()->GetFirstLocalPlayerFromController()->GetPlayerController(GetWorld());
+
 		UWorld* World = GetWorld();
 		if (World)
 		{
+			WarningWidget = CreateWidget<UBorderWarning_UI>(PlayerController, WarningWidgetClass);
 			if (WarningWidget)
 			{
 				WarningWidget->AddToViewport();
@@ -382,21 +394,6 @@ void APlayerPawn::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* Ot
 			{
 				UE_LOG(LogTemp, Warning, TEXT("WarningWidget not found!"));
 			}
-
-			//Gi advarsel om at spilleren nærmer seg en høyde hvor vindene blir farlige gjennom HUD-en
-		}
-	}
-
-	else
-	{
-		if (WarningWidget)
-		{
-			UE_LOG(LogTemp, Warning, TEXT("WarningWidget collapsed"));
-			WarningWidget->SetVisibility(ESlateVisibility::Collapsed);
-		}
-		else
-		{
-			UE_LOG(LogTemp, Warning, TEXT("WarningWidget not found!"));
 		}
 	}
 }

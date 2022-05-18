@@ -39,8 +39,8 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI", meta = (BindWidget))
 	class UTextBlock* Time;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI", meta = (BindWidget))
-	class UTextBlock* TargetsShot;
+	/*UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI", meta = (BindWidget))
+	class UTextBlock* TargetsShot;*/
 
 public:
 	void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;

@@ -4,6 +4,7 @@
 #include "FuelActor.h"
 #include "Components/BoxComponent.h"
 #include "Components/StaticMeshComponent.h"
+#include "Camera/CameraModifier.h"
 
 // Sets default values
 AFuelActor::AFuelActor()
@@ -30,6 +31,10 @@ void AFuelActor::BeginPlay()
 	{
 		UE_LOG(LogTemp, Warning, TEXT("CollisionBox not found!"));
 	}
+
+	BoostCameraModifier = UGameplayStatics::GetPlayerCameraManager(this, 0)->AddNewCameraModifier(BoostCameraModifierClass);
+	BoostCameraModifier->DisableModifier(true);
+
 }
 
 // Called every frame
@@ -47,6 +52,16 @@ void AFuelActor::Tick(float DeltaTime)
 			AFuelActor::SetActorEnableCollision(true);
 		}
 	}
+
+	if (BoostEffectLimit)
+	{
+		BoostEffectDuration += DeltaTime;
+		if (BoostEffectDuration > BoostEffectLimit)
+		{
+			BoostEffectLimit = false;
+			BoostCameraModifier->DisableModifier(true);
+		}
+	}
 }
 
 void AFuelActor::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent,
@@ -62,6 +77,13 @@ void AFuelActor::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* Oth
 			PlayerPawnPtr->boostAvailable = true;
 			fuelActorHidden = true;
 			UGameplayStatics::PlaySound2D(World, FuelPickUpSound, 1.f, 1.f, 0.f, 0);
+
+			// Camera Modifier
+
+			BoostEffectUsed = true;
+			
+			BoostCameraModifier->EnableModifier();
+
 			AFuelActor::SetActorHiddenInGame(true);
 			AFuelActor::SetActorEnableCollision(false);
 
