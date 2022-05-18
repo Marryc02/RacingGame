@@ -2,13 +2,19 @@
 
 
 #include "TargetActor.h"
+#include "Components/BoxComponent.h"
+#include "Components/StaticMeshComponent.h"
 
 // Sets default values
 ATargetActor::ATargetActor()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	CollisionBox = CreateDefaultSubobject<UBoxComponent>(TEXT("CollisionBox"));
+	SetRootComponent(CollisionBox);
 
+	PlayerMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PlayerMesh"));
+	PlayerMesh->SetupAttachment(GetRootComponent());
 }
 
 // Called when the game starts or when spawned
@@ -16,6 +22,14 @@ void ATargetActor::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	if (CollisionBox)
+	{
+		CollisionBox->OnComponentBeginOverlap.AddDynamic(this, &ATargetActor::OnOverlap);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("CollisionBox not found!"));
+	}
 }
 
 // Called every frame

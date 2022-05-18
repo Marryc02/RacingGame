@@ -27,13 +27,22 @@ public:
 
 public:
 
-	UFUNCTION()
-		void OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
-			UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerMesh")
+		class UShapeComponent* CollisionBox = nullptr;
 
-	int TargetsShot = 0;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerMesh")
+		class UStaticMeshComponent* PlayerMesh = nullptr;
 
 	UFUNCTION(BlueprintCallable)
 		int RetTargetsShot();
+
+
+private:
+
+	int TargetsShot = 0;
+
+	UFUNCTION()
+		void OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+			UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
 };
