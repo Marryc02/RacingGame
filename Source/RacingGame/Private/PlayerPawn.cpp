@@ -312,7 +312,7 @@ int APlayerPawn::RetMaxBoost()
 
 int APlayerPawn::RetBoost()
 {
-	return BoostLeft;
+	return BoostDuration;
 }
 
 int APlayerPawn::RetLaps()
