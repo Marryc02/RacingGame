@@ -142,8 +142,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 		void CreateEndGameWidget();
 
-	/*UPROPERTY()
-		int TargetsShotCount = 0;*/
+	UPROPERTY()
+		int TargetsShotCount = 0;
 
 
 	// Health
