@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+	// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "PlayerPawn.h"
 #include "Components/BoxComponent.h"
@@ -6,7 +6,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/FloatingPawnMovement.h"
 #include "Camera/CameraComponent.h"
-//#include "Camera/CameraModifier.h"
+#include "Camera/CameraModifier.h"
 #include "Kismet/GameplayStatics.h"
 #include "TrackActor.h"
 #include "TunnelActor.h"
@@ -22,6 +22,10 @@
 #include "HUDWidget_UI.h"
 #include "EndGameUI.h"
 #include "BorderWarning_UI.h"
+#include "TargetsShotCounter_UI.h"
+#include "GameOver_UI.h"
+//#include "GameFramework/Controller.h"
+//#include "GameFramework/Pawn.h"
 
 
 // Sets default values
@@ -127,11 +131,22 @@ void APlayerPawn::BeginPlay()
 		UE_LOG(LogTemp, Warning, TEXT("HUDWidget not found!"));
 	}
 
+	// Targets Shot Widget
+
+	if (UGameplayStatics::GetCurrentLevelName(GetWorld()) == "ShootingLevel")
+	{
+		TargetsCounterWidget = CreateWidget<UTargetsShotCounter_UI>(PlayerController, TargetsCounterWidgetClass);
+		if (TargetsCounterWidget)
+		{
+			TargetsCounterWidget->AddToViewport();
+		}
+	}
+
 
 	// Camera Modifier
 
-	/*BoostCameraModifier = UGameplayStatics::GetPlayerCameraManager(this, 0)->AddNewCameraModifier(BoostCameraModifierClass);
-	BoostCameraModifier->EnableModifier();*/
+	BoostCameraModifier = UGameplayStatics::GetPlayerCameraManager(this, 0)->AddNewCameraModifier(BoostCameraModifierClass);
+	BoostCameraModifier->DisableModifier(true);
 
 }
 
@@ -152,13 +167,13 @@ void APlayerPawn::Tick(float DeltaTime)
 	if (BoostActivated == true)
 	{
 		BoostDuration += DeltaTime;
-		//Aktiver Camera Lens
+		BoostCameraModifier->EnableModifier();
 		if (BoostDuration > BoostLimit)
 		{
 			BoostActivated = false;
 			FloatingPawnMovementComp->MaxSpeed = 6000.0f;
 			BoostDuration = 0.f;
-			//Deaktiver Camera Lens
+			BoostCameraModifier->DisableModifier(true);
 		}
 	}
 
@@ -186,30 +201,28 @@ void APlayerPawn::Tick(float DeltaTime)
 		if (respawnWait > respawnWaitLimit)
 		{
 			playerCrashed = false;
+			CollisionBox->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 			respawnWait = 0.f;
 
 			if (Health > 0)
 			{
-				/*if (playerCrashed == false)
-				{*/
-					/*if (UGameplayStatics::GetCurrentLevelName(GetWorld()) == "ShootingLevel")
-					{*/
+				if (playerCrashed == false)
+				{
+					if (UGameplayStatics::GetCurrentLevelName(GetWorld()) == "ShootingLevel")
+					{
 						SetActorLocation(RespawnLocation);
 						SetActorRotation(RespawnRotation);
-					/*}*/
-					/*else if (UGameplayStatics::GetCurrentLevelName(GetWorld()) == "RacingLevel")
-					{*/
-						/*SetActorLocation(RespawnLocation);
-						SetActorRotation(RespawnRotation);*/
-					/*}*/
-
-					CollisionBox->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-
-				//}
+					}
+					else if (UGameplayStatics::GetCurrentLevelName(GetWorld()) == "RacingLevel")
+					{
+						SetActorLocation(RespawnLocation);
+						SetActorRotation(RespawnRotation);
+					}
+				}
 			}
 			else
 			{
-				CreateEndGameWidget();
+				CreateGameOverWidget();
 				this->Destroy();
 			}
 		}
@@ -345,6 +358,50 @@ void APlayerPawn::Shoot() {
 
 // Return varibles
 
+void APlayerPawn::CreateGameOverWidget()
+{
+	APlayerController* PlayerController = GetWorld()->GetFirstLocalPlayerFromController()->GetPlayerController(GetWorld());
+	if (PlayerController)
+	{
+		/*float FinalRaceTime = (float)GameModeBasePtrs->FinalRaceTime;*/
+		/*UE_LOG(LogTemp, Warning, TEXT("Final Race Time: , %f"), FinalRaceTime);*/
+		if (HUDWidget)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("HUDWidget collapsed"));
+			HUDWidget->SetVisibility(ESlateVisibility::Collapsed);
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("HUDWidget not found!"));
+		}
+
+		if (TargetsCounterWidget)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("TargetsCounterWidget collapsed"));
+			TargetsCounterWidget->SetVisibility(ESlateVisibility::Collapsed);
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("TargetsCounterWidget not found!"));
+		}
+
+		UGameOver_UI* GameOverWidget = CreateWidget<UGameOver_UI>(PlayerController, GameOverWidgetClass);
+		if (GameOverWidget)
+		{
+			GameOverWidget->AddToViewport();
+			PlayerController->SetShowMouseCursor(true);
+			FInputModeUIOnly InputMode{};
+			InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::LockAlways);
+			PlayerController->SetInputMode(InputMode);
+			UGameplayStatics::SetGamePaused(GetWorld(), true);
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("EndGameWidget not found!"));
+		}
+	}
+}
+
 void APlayerPawn::CreateEndGameWidget()
 {
 	APlayerController* PlayerController = GetWorld()->GetFirstLocalPlayerFromController()->GetPlayerController(GetWorld());
@@ -360,6 +417,16 @@ void APlayerPawn::CreateEndGameWidget()
 		else
 		{
 			UE_LOG(LogTemp, Warning, TEXT("HUDWidget not found!"));
+		}
+
+		if (TargetsCounterWidget)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("TargetsCounterWidget collapsed"));
+			TargetsCounterWidget->SetVisibility(ESlateVisibility::Collapsed);
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("TargetsCounterWidget not found!"));
 		}
 
 		UEndGameUI* EndGameWidget = CreateWidget<UEndGameUI>(PlayerController, EndGameWidgetClass);

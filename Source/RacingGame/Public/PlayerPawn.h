@@ -92,11 +92,11 @@ public:
 
 	// Camera Modifiers
 
-	/*UPROPERTY(meta = (AllowPrivateAccess = "true"), EditAnywhere, Category = "CameraBoost")
+	UPROPERTY(meta = (AllowPrivateAccess = "true"), EditAnywhere, Category = "CameraBoost")
 		TSubclassOf<UCameraModifier> BoostCameraModifierClass = nullptr;
 
 	UPROPERTY()
-		class UCameraModifier* BoostCameraModifier = nullptr;*/
+		class UCameraModifier* BoostCameraModifier = nullptr;
 
 
 	// Border stuff
@@ -110,7 +110,7 @@ public:
 	bool RoofBorderTouched = false;
 
 
-	// HUD Widget
+	// Widget
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
 		TSubclassOf<UUserWidget> HUDWidgetClass;
@@ -125,6 +125,27 @@ public:
 
 	class UBorderWarning_UI* WarningWidget;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
+		TSubclassOf<UUserWidget> TargetsCounterWidgetClass;
+
+	class UTargetsShotCounter_UI* TargetsCounterWidget;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
+		TSubclassOf<UUserWidget> EndGameWidgetClass;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
+		TSubclassOf<UUserWidget> GameOverWidgetClass;
+
+	UFUNCTION(BlueprintCallable)
+		void CreateGameOverWidget();
+
+	UFUNCTION(BlueprintCallable)
+		void CreateEndGameWidget();
+
+	UPROPERTY()
+		int TargetsShotCount = 0;
+
+
 	// Health
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerMesh")
@@ -138,15 +159,7 @@ public:
 
 	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
 		TSubclassOf<AActor> BulletActorConnectionBP;
-
-
-	// EndGame Widget
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
-		TSubclassOf<UUserWidget> EndGameWidgetClass;
-
-	UFUNCTION(BlueprintCallable)
-		void CreateEndGameWidget();
+	
 
 	// Return varibles
 

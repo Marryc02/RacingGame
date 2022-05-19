@@ -80,6 +80,7 @@ void ATargetActor::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* O
 	{
 		UWorld* World = GetWorld();
 		if (World) {
+			/*PlayerPawnPtr->TargetsShotCount++;*/
 			TargetsShot++;
 
 			this->Destroy();
@@ -89,6 +90,7 @@ void ATargetActor::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* O
 	else if (OtherActor->IsA(APlayerPawn::StaticClass()))
 	{
 		PlayerPawnPtr->Health--;
+		/*PlayerPawnPtr->TargetsShotCount++;*/
 		TargetsShot++;
 
 		this->Destroy();
@@ -96,7 +98,7 @@ void ATargetActor::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* O
 	}
 }
 
-int ATargetActor::RetTargetsShot()
-{
-	return TargetsShot;
-}
+//int ATargetActor::RetTargetsShot()
+//{
+//	return TargetsShot;
+//}

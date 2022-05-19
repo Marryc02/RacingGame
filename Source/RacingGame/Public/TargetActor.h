@@ -29,14 +29,16 @@ public:
 
 public:
 
+	class APlayerPawn* PlayerPawnPtr = Cast<APlayerPawn>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerMesh")
 		class UShapeComponent* CollisionBox = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerMesh")
 		class UStaticMeshComponent* PlayerMesh = nullptr;
 
-	UFUNCTION(BlueprintCallable)
-		int RetTargetsShot();
+	/*UFUNCTION(BlueprintCallable)
+		int RetTargetsShot();*/
 
 	UPROPERTY(EditAnywhere, Category = "Movement")
 		float Speed = 1000.f;
@@ -49,8 +51,6 @@ public:
 	bool allTargetsDown = false;
 
 private:
-
-	class APlayerPawn* PlayerPawnPtr = Cast<APlayerPawn>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
 
 	FVector MoveDirection = FVector(0.f, 0.f, -1.f);
 

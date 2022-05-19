@@ -45,11 +45,6 @@ void UHUDWidget_UI::NativeTick(const FGeometry& MyGeometry, float InDeltaTime) {
 		float RaceTime = (float)GameModeBasePtrs->RetRaceTime();
 		Time->SetText(GetTimeTextFromFloat(RaceTime));
 
-
-		// Targets
-
-		/*TargetsShot->SetText(FText::AsNumber(TargetActorPtrs->RetTargetsShot()));*/
-
 	}
 
 }

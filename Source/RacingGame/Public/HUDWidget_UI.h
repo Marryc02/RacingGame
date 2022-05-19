@@ -6,7 +6,6 @@
 #include "Blueprint/UserWidget.h"
 #include "PlayerPawn.h"
 #include "RacingGameClasses.h"
-#include "TargetActor.h"
 #include "Kismet/GameplayStatics.h"
 #include "../RacingGameGameModeBase.h"
 #include "HUDWidget_UI.generated.h"
@@ -23,7 +22,6 @@ public:
 
 	APlayerPawn* PlayerPawnPtrs = Cast<APlayerPawn>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
 	ARacingGameGameModeBase* GameModeBasePtrs = Cast<ARacingGameGameModeBase>(UGameplayStatics::GetGameMode(GetWorld()));
-	ATargetActor* TargetActorPtrs = Cast<ATargetActor>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
 
 protected:
 
