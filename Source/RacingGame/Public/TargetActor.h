@@ -29,7 +29,8 @@ public:
 
 public:
 
-	class APlayerPawn* PlayerPawnPtr = Cast<APlayerPawn>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
+	class APlayerPawn* PlayerPawnPtr{ nullptr };
+	/*= Cast<APlayerPawn>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));*/
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerMesh")
 		class UShapeComponent* CollisionBox = nullptr;

@@ -39,6 +39,11 @@ void ATargetActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if (PlayerPawnPtr == nullptr)
+	{
+		PlayerPawnPtr = Cast<APlayerPawn>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
+	}
+
 	if (moveDown == true)
 	{
 		FVector NewLocation = GetActorLocation();
@@ -65,10 +70,13 @@ void ATargetActor::Tick(float DeltaTime)
 			UE_LOG(LogTemp, Warning, TEXT("Targets moving down."));
 		}
 	}
-
-	if (TargetsShot == 9)
+	
+	if (PlayerPawnPtr != nullptr)
 	{
-		PlayerPawnPtr->allTargetsDown = true;
+		if (TargetsShot == 9)
+		{
+			PlayerPawnPtr->allTargetsDown = true;
+		}
 	}
 
 }
@@ -76,11 +84,20 @@ void ATargetActor::Tick(float DeltaTime)
 void ATargetActor::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+	if (PlayerPawnPtr == nullptr)
+	{
+		PlayerPawnPtr = Cast<APlayerPawn>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
+	}
+
 	if (OtherActor->IsA(ABulletActor::StaticClass()))
 	{
+		UE_LOG(LogTemp, Warning, TEXT("BULLET"));
 		UWorld* World = GetWorld();
 		if (World) {
-			/*PlayerPawnPtr->TargetsShotCount++;*/
+			if (PlayerPawnPtr != nullptr)
+			{
+				PlayerPawnPtr->TargetsShotCount++;
+			}
 			TargetsShot++;
 
 			this->Destroy();
@@ -89,8 +106,13 @@ void ATargetActor::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* O
 
 	else if (OtherActor->IsA(APlayerPawn::StaticClass()))
 	{
-		PlayerPawnPtr->Health--;
-		/*PlayerPawnPtr->TargetsShotCount++;*/
+		UE_LOG(LogTemp, Warning, TEXT("PLAYER"));
+		
+		if (PlayerPawnPtr != nullptr)
+		{
+			PlayerPawnPtr->TargetsShotCount++;
+			PlayerPawnPtr->Health--;
+		}
 		TargetsShot++;
 
 		this->Destroy();
