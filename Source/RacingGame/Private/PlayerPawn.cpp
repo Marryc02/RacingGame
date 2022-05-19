@@ -24,8 +24,7 @@
 #include "BorderWarning_UI.h"
 #include "TargetsShotCounter_UI.h"
 #include "GameOver_UI.h"
-//#include "GameFramework/Controller.h"
-//#include "GameFramework/Pawn.h"
+
 
 
 // Sets default values
@@ -201,12 +200,11 @@ void APlayerPawn::Tick(float DeltaTime)
 		if (respawnWait > respawnWaitLimit)
 		{
 			playerCrashed = false;
-			CollisionBox->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 			respawnWait = 0.f;
 
 			if (Health > 0)
 			{
-				if (playerCrashed == false)
+				/*if (playerCrashed == false)
 				{
 					if (UGameplayStatics::GetCurrentLevelName(GetWorld()) == "ShootingLevel")
 					{
@@ -214,11 +212,12 @@ void APlayerPawn::Tick(float DeltaTime)
 						SetActorRotation(RespawnRotation);
 					}
 					else if (UGameplayStatics::GetCurrentLevelName(GetWorld()) == "RacingLevel")
-					{
+					{*/
 						SetActorLocation(RespawnLocation);
 						SetActorRotation(RespawnRotation);
-					}
-				}
+						CollisionBox->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+				/*	}
+				}*/
 			}
 			else
 			{

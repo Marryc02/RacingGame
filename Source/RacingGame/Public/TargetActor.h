@@ -48,7 +48,7 @@ public:
 
 	FVector InitialLocation;
 
-	bool allTargetsDown = false;
+	/*bool allTargetsDown = false;*/
 
 private:
 

@@ -5,7 +5,7 @@
 #include "Components/TextBlock.h"
 
 void UTargetsShotCounter_UI::NativeTick(const FGeometry& MyGeometry, float InDeltaTime) {
-	Super::NativeTick(MyGeometry, InDeltaTime);
+	/*Super::NativeTick(MyGeometry, InDeltaTime);
 
 	if (PlayerPawnPtr == nullptr)
 	{
@@ -15,6 +15,6 @@ void UTargetsShotCounter_UI::NativeTick(const FGeometry& MyGeometry, float InDel
 	{
 		int TargetsShot = (int)PlayerPawnPtr->TargetsShotCount;
 		TargetsShotCounter->SetText(FText::AsNumber(TargetsShot));
-	}
+	}*/
 
 }
