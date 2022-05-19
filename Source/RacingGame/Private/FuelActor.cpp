@@ -69,7 +69,7 @@ void AFuelActor::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* Oth
 			SetActorHiddenInGame(true);
 			CollisionBox->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
-			GEngine->AddOnScreenDebugMessage(-1, 12.f, FColor::Red, FString::Printf(TEXT("Player picked up fuel!")));
+			/*GEngine->AddOnScreenDebugMessage(-1, 12.f, FColor::Red, FString::Printf(TEXT("Player picked up fuel!")));*/
 
 		}
 	}
