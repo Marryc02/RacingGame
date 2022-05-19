@@ -119,8 +119,3 @@ void ATargetActor::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* O
 
 	}
 }
-
-//int ATargetActor::RetTargetsShot()
-//{
-//	return TargetsShot;
-//}

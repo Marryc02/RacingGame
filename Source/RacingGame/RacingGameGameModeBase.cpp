@@ -57,16 +57,3 @@ float ARacingGameGameModeBase::RetFinalRaceTime()
 {
 	return FinalRaceTime;
 }
-
-//void ARacingGameGameModeBase::CreateEndGameWidget()
-//{
-//	APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
-//	if (PlayerController)
-//	{
-//		UEndGameUI* EndGameWidget = CreateWidget<UEndGameUI>(PlayerController, EndGameWidgetClass.Get());
-//		PlayerController->SetShowMouseCursor(true);
-//		FInputModeUIOnly InputMode{};
-//		InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::LockAlways);
-//		PlayerController->SetInputMode(InputMode);
-//	}
-//}

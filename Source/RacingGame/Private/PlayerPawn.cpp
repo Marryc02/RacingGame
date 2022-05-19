@@ -204,20 +204,9 @@ void APlayerPawn::Tick(float DeltaTime)
 
 			if (Health > 0)
 			{
-				/*if (playerCrashed == false)
-				{
-					if (UGameplayStatics::GetCurrentLevelName(GetWorld()) == "ShootingLevel")
-					{
-						SetActorLocation(RespawnLocation);
-						SetActorRotation(RespawnRotation);
-					}
-					else if (UGameplayStatics::GetCurrentLevelName(GetWorld()) == "RacingLevel")
-					{*/
-						SetActorLocation(RespawnLocation);
-						SetActorRotation(RespawnRotation);
-						CollisionBox->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-				/*	}
-				}*/
+				SetActorLocation(RespawnLocation);
+				SetActorRotation(RespawnRotation);
+				CollisionBox->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 			}
 			else
 			{
@@ -266,14 +255,14 @@ void APlayerPawn::PauseGame() {
 	if (isPaused == false)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("PAUSED"));
-		GEngine->AddOnScreenDebugMessage(-1, 12.f, FColor::Red, FString::Printf(TEXT("You have paused the game!")));
+		/*GEngine->AddOnScreenDebugMessage(-1, 12.f, FColor::Red, FString::Printf(TEXT("You have paused the game!")));*/
 		UGameplayStatics::SetGamePaused(GetWorld(), true);
 		isPaused = true;
 	}
 	else
 	{
 		UE_LOG(LogTemp, Warning, TEXT("UNPAUSED"));
-		GEngine->AddOnScreenDebugMessage(-1, 12.f, FColor::Yellow, FString::Printf(TEXT("You have unpaused the game!")));
+		/*GEngine->AddOnScreenDebugMessage(-1, 12.f, FColor::Yellow, FString::Printf(TEXT("You have unpaused the game!")));*/
 		UGameplayStatics::SetGamePaused(GetWorld(), false);
 		isPaused = false;
 	}
@@ -362,8 +351,6 @@ void APlayerPawn::CreateGameOverWidget()
 	APlayerController* PlayerController = GetWorld()->GetFirstLocalPlayerFromController()->GetPlayerController(GetWorld());
 	if (PlayerController)
 	{
-		/*float FinalRaceTime = (float)GameModeBasePtrs->FinalRaceTime;*/
-		/*UE_LOG(LogTemp, Warning, TEXT("Final Race Time: , %f"), FinalRaceTime);*/
 		if (HUDWidget)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("HUDWidget collapsed"));
@@ -406,8 +393,6 @@ void APlayerPawn::CreateEndGameWidget()
 	APlayerController* PlayerController = GetWorld()->GetFirstLocalPlayerFromController()->GetPlayerController(GetWorld());
 	if (PlayerController)
 	{
-		/*float FinalRaceTime = (float)GameModeBasePtrs->FinalRaceTime;*/
-		/*UE_LOG(LogTemp, Warning, TEXT("Final Race Time: , %f"), FinalRaceTime);*/
 		if (HUDWidget)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("HUDWidget collapsed"));
@@ -489,7 +474,7 @@ void APlayerPawn::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* Ot
 		if (World)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Ship hit the track."));
-			GEngine->AddOnScreenDebugMessage(-1, 12.f, FColor::Red, FString::Printf(TEXT("You crashed into the track!")));
+			/*GEngine->AddOnScreenDebugMessage(-1, 12.f, FColor::Red, FString::Printf(TEXT("You crashed into the track!")));*/
 
 			UGameplayStatics::PlaySound2D(World, DeathSound, 1.f, 1.f, 0.f, 0);
 
@@ -507,17 +492,17 @@ void APlayerPawn::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* Ot
 
 		RespawnLocation = GetActorLocation();
 		RespawnRotation = GetActorRotation();
-		GEngine->AddOnScreenDebugMessage(-1, 12.f, FColor::Yellow, FString::Printf(TEXT("Set Respawn location.")));
+		/*GEngine->AddOnScreenDebugMessage(-1, 12.f, FColor::Yellow, FString::Printf(TEXT("Set Respawn location.")));
 		GEngine->AddOnScreenDebugMessage(-1, 12.f, FColor::Yellow, FString::Printf(TEXT("Set Respawn rotation.")));
 
-		GEngine->AddOnScreenDebugMessage(-1, 12.f, FColor::Yellow, FString::Printf(TEXT("Player reached a checkpoint!")));
+		GEngine->AddOnScreenDebugMessage(-1, 12.f, FColor::Yellow, FString::Printf(TEXT("Player reached a checkpoint!")));*/
 	}
 
 	else if (OtherActor->IsA(ARoofBorderActorOne::StaticClass()) && RoofBorderTouched == false)
 	{
 		FloatingPawnMovementComp->MaxSpeed = 3000.0f;
 		RoofBorderTouched = true;
-		GEngine->AddOnScreenDebugMessage(-1, 12.f, FColor::Red, FString::Printf(TEXT("Player is nearing dangerous altitudes!")));
+		/*GEngine->AddOnScreenDebugMessage(-1, 12.f, FColor::Red, FString::Printf(TEXT("Player is nearing dangerous altitudes!")));*/
 
 		APlayerController* PlayerController = GetWorld()->GetFirstLocalPlayerFromController()->GetPlayerController(GetWorld());
 

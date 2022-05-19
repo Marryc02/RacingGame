@@ -17,9 +17,7 @@ class RACINGGAME_API UTargetsShotCounter_UI : public UUserWidget
 	
 public:
 
-	/*class ATargetActor* TargetActorPtrs = Cast<ATargetActor>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));*/
 	class APlayerPawn* PlayerPawnPtr{ nullptr };
-	/*Cast<APlayerPawn>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));*/
 
 protected:
 

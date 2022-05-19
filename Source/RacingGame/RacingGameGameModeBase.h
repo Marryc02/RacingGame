@@ -8,9 +8,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "RacingGameGameModeBase.generated.h"
 
-/**
- * 
- */
+
 UCLASS()
 class RACINGGAME_API ARacingGameGameModeBase : public AGameModeBase
 {
@@ -24,7 +22,6 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 
-	/*class APlayerPawn* PlayerPawnPtr = Cast<APlayerPawn>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));*/
 
 	// Timer
 
@@ -45,15 +42,6 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	float RetFinalRaceTime();
-
-	/*UFUNCTION(BlueprintCallable)
-		void CreateEndGameWidget();*/
-
-
-	// Widget
-
-	/*UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
-		TSubclassOf<UUserWidget> EndGameWidgetClass;*/
 
 
 private:

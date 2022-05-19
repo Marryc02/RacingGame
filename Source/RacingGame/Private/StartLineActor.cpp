@@ -11,7 +11,6 @@ AStartLineActor::AStartLineActor()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	CollisionBox = CreateDefaultSubobject<UBoxComponent>(TEXT("CollisionBox"));
-	/*CollisionBox->SetCollisionEnabled(ECollisionEnabled::QueryOnly);*/
 	SetRootComponent(CollisionBox);
 
 }
@@ -59,7 +58,7 @@ void AStartLineActor::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Race finished."));
 			PlayerPawnPtr->CreateEndGameWidget();
-			GEngine->AddOnScreenDebugMessage(-1, 12.f, FColor::Red, FString::Printf(TEXT("You won the race!")));
+			/*GEngine->AddOnScreenDebugMessage(-1, 12.f, FColor::Red, FString::Printf(TEXT("You won the race!")));*/
 		}
 		else
 		{
@@ -80,12 +79,12 @@ void AStartLineActor::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor
 				PlayerPawnPtr->CheckpointsReached = 0;
 
 				if (PlayerPawnPtr->FinishLineCrossed < 3) {
-					GEngine->AddOnScreenDebugMessage(-1, 12.f, FColor::Red, FString::Printf(TEXT("Player crossed the starting line!")));
+					/*GEngine->AddOnScreenDebugMessage(-1, 12.f, FColor::Red, FString::Printf(TEXT("Player crossed the starting line!")));*/
 				}
 				else if (PlayerPawnPtr->FinishLineCrossed == 3) {
 					UE_LOG(LogTemp, Warning, TEXT("Race finished."));
 					PlayerPawnPtr->CreateEndGameWidget();
-					GEngine->AddOnScreenDebugMessage(-1, 12.f, FColor::Red, FString::Printf(TEXT("You won the race!")));
+					/*GEngine->AddOnScreenDebugMessage(-1, 12.f, FColor::Red, FString::Printf(TEXT("You won the race!")));*/
 				}
 			}
 		}
