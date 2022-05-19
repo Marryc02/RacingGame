@@ -51,6 +51,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerMesh")
 		class UStaticMeshComponent* PlayerMesh = nullptr;
 
+	bool allTargetsDown = false;
+
 
 	// Cameras
 
@@ -100,7 +102,7 @@ public:
 	// Border stuff
 
 	UPROPERTY(EditAnywhere, Category = "BoostTime")
-		float BorderSlowLimit = 5.f;
+		float BorderSlowLimit = 3.f;
 
 	UPROPERTY(EditAnywhere, Category = "BoostTime")
 		float BorderSlowDuration = 0.f;

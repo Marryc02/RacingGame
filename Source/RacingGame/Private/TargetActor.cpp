@@ -66,6 +66,11 @@ void ATargetActor::Tick(float DeltaTime)
 		}
 	}
 
+	if (TargetsShot == 9)
+	{
+		PlayerPawnPtr->allTargetsDown = true;
+	}
+
 }
 
 void ATargetActor::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
@@ -79,6 +84,15 @@ void ATargetActor::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* O
 
 			this->Destroy();
 		}
+	}
+
+	else if (OtherActor->IsA(APlayerPawn::StaticClass()))
+	{
+		PlayerPawnPtr->Health--;
+		TargetsShot++;
+
+		this->Destroy();
+
 	}
 }
 

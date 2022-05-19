@@ -6,7 +6,9 @@
 #include "GameFramework/Actor.h"
 #include "BulletActor.h"
 #include "Kismet/GameplayStatics.h"
+#include "PlayerPawn.h"
 #include "TargetActor.generated.h"
+
 
 UCLASS()
 class RACINGGAME_API ATargetActor : public AActor
@@ -44,7 +46,11 @@ public:
 
 	FVector InitialLocation;
 
+	bool allTargetsDown = false;
+
 private:
+
+	class APlayerPawn* PlayerPawnPtr = Cast<APlayerPawn>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
 
 	FVector MoveDirection = FVector(0.f, 0.f, -1.f);
 

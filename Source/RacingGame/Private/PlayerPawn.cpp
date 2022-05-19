@@ -18,11 +18,11 @@
 #include "RoofBorderActorTwo.h"
 #include "RegularBorderActor.h"
 #include "CheckpointActor.h"
+#include "TargetActor.h"
 #include "HUDWidget_UI.h"
 #include "EndGameUI.h"
 #include "BorderWarning_UI.h"
-//#include "GameFramework/Controller.h"
-//#include "GameFramework/Pawn.h"
+
 
 // Sets default values
 APlayerPawn::APlayerPawn()
@@ -178,30 +178,34 @@ void APlayerPawn::Tick(float DeltaTime)
 		}
 	}
 
+	//Respawn tick 
+
 	if (playerCrashed == true)
 	{
 		respawnWait += DeltaTime;
 		if (respawnWait > respawnWaitLimit)
 		{
 			playerCrashed = false;
-			CollisionBox->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 			respawnWait = 0.f;
 
 			if (Health > 0)
 			{
-				if (playerCrashed == false)
-				{
-					if (UGameplayStatics::GetCurrentLevelName(GetWorld()) == "ShootingLevel")
-					{
+				/*if (playerCrashed == false)
+				{*/
+					/*if (UGameplayStatics::GetCurrentLevelName(GetWorld()) == "ShootingLevel")
+					{*/
 						SetActorLocation(RespawnLocation);
 						SetActorRotation(RespawnRotation);
-					}
-					else if (UGameplayStatics::GetCurrentLevelName(GetWorld()) == "RacingLevel")
-					{
-						SetActorLocation(RespawnLocation);
-						SetActorRotation(RespawnRotation);
-					}
-				}
+					/*}*/
+					/*else if (UGameplayStatics::GetCurrentLevelName(GetWorld()) == "RacingLevel")
+					{*/
+						/*SetActorLocation(RespawnLocation);
+						SetActorRotation(RespawnRotation);*/
+					/*}*/
+
+					CollisionBox->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+
+				//}
 			}
 			else
 			{
@@ -465,4 +469,5 @@ void APlayerPawn::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* Ot
 			}
 		}
 	}
+
 }

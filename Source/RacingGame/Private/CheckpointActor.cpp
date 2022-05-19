@@ -36,6 +36,7 @@ void ACheckpointActor::Tick(float DeltaTime)
 		{
 			checkpointHidden = false;
 			ACheckpointActor::SetActorEnableCollision(true);
+			HideDuration = 0.f;
 		}
 	}
 }

@@ -43,6 +43,7 @@ void AStartLineActor::Tick(float DeltaTime)
 		if (HideDuration > HideLimit)
 		{
 			startLineHidden = false;
+			HideDuration = 0.f;
 		}
 	}
 
@@ -54,30 +55,38 @@ void AStartLineActor::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor
 	if (OtherActor->IsA(APlayerPawn::StaticClass()) && startLineHidden == false)
 	{
 		APlayerPawn* PlayerPawnPtr = Cast<APlayerPawn>(OtherActor);
-
-		PlayerPawnPtr->RespawnLocation = GetActorLocation();
-		if (UGameplayStatics::GetCurrentLevelName(GetWorld()) == "ShootingLevel")
+		if (PlayerPawnPtr->allTargetsDown == true && PlayerPawnPtr->CheckpointsReached == 3)
 		{
-			PlayerPawnPtr->RespawnRotation = GetActorRotation() += FRotator(0.f, 90.f, 0.f);
+			UE_LOG(LogTemp, Warning, TEXT("Race finished."));
+			PlayerPawnPtr->CreateEndGameWidget();
+			GEngine->AddOnScreenDebugMessage(-1, 12.f, FColor::Red, FString::Printf(TEXT("You won the race!")));
 		}
-		else if (UGameplayStatics::GetCurrentLevelName(GetWorld()) == "RacingLevel")
+		else
 		{
-			PlayerPawnPtr->RespawnRotation = GetActorRotation() += FRotator(0.f, -90.f, 0.f);
-		}
-
-		if (PlayerPawnPtr->CheckpointsReached == 3)
-		{
-			startLineHidden = true;
-			PlayerPawnPtr->FinishLineCrossed += 1;
-			PlayerPawnPtr->CheckpointsReached = 0;
-
-			if (PlayerPawnPtr->FinishLineCrossed < 3) {
-				GEngine->AddOnScreenDebugMessage(-1, 12.f, FColor::Red, FString::Printf(TEXT("Player crossed the starting line!")));
+			PlayerPawnPtr->RespawnLocation = GetActorLocation();
+			if (UGameplayStatics::GetCurrentLevelName(GetWorld()) == "ShootingLevel")
+			{
+				PlayerPawnPtr->RespawnRotation = GetActorRotation() += FRotator(0.f, 90.f, 0.f);
 			}
-			else if (PlayerPawnPtr->FinishLineCrossed == 3) {
-				UE_LOG(LogTemp, Warning, TEXT("Race finished."));
-				PlayerPawnPtr->CreateEndGameWidget();
-				GEngine->AddOnScreenDebugMessage(-1, 12.f, FColor::Red, FString::Printf(TEXT("You won the race!")));
+			else if (UGameplayStatics::GetCurrentLevelName(GetWorld()) == "RacingLevel")
+			{
+				PlayerPawnPtr->RespawnRotation = GetActorRotation() += FRotator(0.f, -90.f, 0.f);
+			}
+
+			if (PlayerPawnPtr->CheckpointsReached == 3)
+			{
+				startLineHidden = true;
+				PlayerPawnPtr->FinishLineCrossed += 1;
+				PlayerPawnPtr->CheckpointsReached = 0;
+
+				if (PlayerPawnPtr->FinishLineCrossed < 3) {
+					GEngine->AddOnScreenDebugMessage(-1, 12.f, FColor::Red, FString::Printf(TEXT("Player crossed the starting line!")));
+				}
+				else if (PlayerPawnPtr->FinishLineCrossed == 3) {
+					UE_LOG(LogTemp, Warning, TEXT("Race finished."));
+					PlayerPawnPtr->CreateEndGameWidget();
+					GEngine->AddOnScreenDebugMessage(-1, 12.f, FColor::Red, FString::Printf(TEXT("You won the race!")));
+				}
 			}
 		}
 	}
