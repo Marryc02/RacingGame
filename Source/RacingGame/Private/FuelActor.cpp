@@ -32,9 +32,6 @@ void AFuelActor::BeginPlay()
 		UE_LOG(LogTemp, Warning, TEXT("CollisionBox not found!"));
 	}
 
-	BoostCameraModifier = UGameplayStatics::GetPlayerCameraManager(this, 0)->AddNewCameraModifier(BoostCameraModifierClass);
-	BoostCameraModifier->DisableModifier(true);
-
 }
 
 // Called every frame
@@ -48,18 +45,8 @@ void AFuelActor::Tick(float DeltaTime)
 		if (HideDuration > HideLimit)
 		{
 			fuelActorHidden = false;
-			AFuelActor::SetActorHiddenInGame(false);
-			AFuelActor::SetActorEnableCollision(true);
-		}
-	}
-
-	if (BoostEffectLimit)
-	{
-		BoostEffectDuration += DeltaTime;
-		if (BoostEffectDuration > BoostEffectLimit)
-		{
-			BoostEffectLimit = false;
-			BoostCameraModifier->DisableModifier(true);
+			SetActorHiddenInGame(false);
+			SetActorEnableCollision(true);
 		}
 	}
 }
@@ -78,16 +65,11 @@ void AFuelActor::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* Oth
 			fuelActorHidden = true;
 			UGameplayStatics::PlaySound2D(World, FuelPickUpSound, 1.f, 1.f, 0.f, 0);
 
-			// Camera Modifier
-
-			BoostEffectUsed = true;
-			
-			BoostCameraModifier->EnableModifier();
-
-			AFuelActor::SetActorHiddenInGame(true);
-			AFuelActor::SetActorEnableCollision(false);
+			SetActorHiddenInGame(true);
+			SetActorEnableCollision(false);
 
 			GEngine->AddOnScreenDebugMessage(-1, 12.f, FColor::Red, FString::Printf(TEXT("Player picked up fuel!")));
+
 		}
 	}
 

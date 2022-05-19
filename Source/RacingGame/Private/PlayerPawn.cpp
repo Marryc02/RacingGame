@@ -13,6 +13,7 @@
 #include "StartLineActor.h"
 #include "StartLineIndicatorColliderActor.h"
 #include "CrystalActor.h"
+#include "CrystalActorRed.h"
 #include "RoofBorderActorOne.h"
 #include "RoofBorderActorTwo.h"
 #include "RegularBorderActor.h"
@@ -20,6 +21,8 @@
 #include "HUDWidget_UI.h"
 #include "EndGameUI.h"
 #include "BorderWarning_UI.h"
+//#include "GameFramework/Controller.h"
+//#include "GameFramework/Pawn.h"
 
 // Sets default values
 APlayerPawn::APlayerPawn()
@@ -81,13 +84,26 @@ void APlayerPawn::BeginPlay()
 {
 	Super::BeginPlay();
 
+	// Other
+
+	RespawnLocation = GetActorLocation();
+	if (UGameplayStatics::GetCurrentLevelName(GetWorld()) == "ShootingLevel")
+	{
+		RespawnRotation = GetActorRotation() += FRotator(0.f, 90.f, 0.f);
+	}
+	else if (UGameplayStatics::GetCurrentLevelName(GetWorld()) == "RacingLevel")
+	{
+		RespawnRotation = GetActorRotation() += FRotator(0.f, -90.f, 0.f);
+	}
+
+
+	// Related to 3 2 1 GO!
+
 	APlayerController* PlayerController = GetWorld()->GetFirstLocalPlayerFromController()->GetPlayerController(GetWorld());
 	FInputModeUIOnly InputMode{};
 	PlayerController->SetInputMode(InputMode);
 
 	GetWorld()->GetTimerManager().SetTimer(StartTimer, this, &APlayerPawn::OnStartTimerComplete, 3.f, false);
-
-	FinishLineCrossed = 0;
 
 	if (CollisionBox)
 	{
@@ -99,7 +115,7 @@ void APlayerPawn::BeginPlay()
 	}
 
 
-	// Widget
+	// HUD-Widget
 
 	HUDWidget = CreateWidget<UHUDWidget_UI>(PlayerController, HUDWidgetClass.Get());
 	if (HUDWidget)
@@ -124,23 +140,29 @@ void APlayerPawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (gameHasStarted == true)
+	//Movement tick
+
+	if (gameHasStarted == true && playerCrashed != true)
 	{
 		AddMovementInput(GetActorForwardVector(), 1.0f);
 	}
 
-	
+	//Boost tick
+
 	if (BoostActivated == true)
 	{
 		BoostDuration += DeltaTime;
-		BoostLeft = 6.f - BoostDuration;
+		//Aktiver Camera Lens
 		if (BoostDuration > BoostLimit)
 		{
 			BoostActivated = false;
 			FloatingPawnMovementComp->MaxSpeed = 6000.0f;
 			BoostDuration = 0.f;
+			//Deaktiver Camera Lens
 		}
 	}
+
+	//Border tick
 
 	if (RoofBorderTouched == true)
 	{
@@ -153,6 +175,39 @@ void APlayerPawn::Tick(float DeltaTime)
 
 			UE_LOG(LogTemp, Warning, TEXT("WarningWidget collapsed"));
 			WarningWidget->SetVisibility(ESlateVisibility::Collapsed);
+		}
+	}
+
+	if (playerCrashed == true)
+	{
+		respawnWait += DeltaTime;
+		if (respawnWait > respawnWaitLimit)
+		{
+			playerCrashed = false;
+			CollisionBox->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+			respawnWait = 0.f;
+
+			if (Health > 0)
+			{
+				if (playerCrashed == false)
+				{
+					if (UGameplayStatics::GetCurrentLevelName(GetWorld()) == "ShootingLevel")
+					{
+						SetActorLocation(RespawnLocation);
+						SetActorRotation(RespawnRotation);
+					}
+					else if (UGameplayStatics::GetCurrentLevelName(GetWorld()) == "RacingLevel")
+					{
+						SetActorLocation(RespawnLocation);
+						SetActorRotation(RespawnRotation);
+					}
+				}
+			}
+			else
+			{
+				CreateEndGameWidget();
+				this->Destroy();
+			}
 		}
 	}
 	
@@ -177,6 +232,8 @@ void APlayerPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 
 }
 
+//Start timer
+
 void APlayerPawn::OnStartTimerComplete()
 {
 	APlayerController* PlayerController = GetWorld()->GetFirstLocalPlayerFromController()->GetPlayerController(GetWorld());
@@ -187,7 +244,7 @@ void APlayerPawn::OnStartTimerComplete()
 }
 
 
-// Other
+// Pausing
 
 void APlayerPawn::PauseGame() {
 	if (isPaused == false)
@@ -205,6 +262,8 @@ void APlayerPawn::PauseGame() {
 		isPaused = false;
 	}
 }
+
+// 3rd person
 
 void APlayerPawn::SwitchPerspective() {
 	UE_LOG(LogTemp, Warning, TEXT("Switching perspective view"));
@@ -287,8 +346,8 @@ void APlayerPawn::CreateEndGameWidget()
 	APlayerController* PlayerController = GetWorld()->GetFirstLocalPlayerFromController()->GetPlayerController(GetWorld());
 	if (PlayerController)
 	{
-		float FinalRaceTime = (float)GameModeBasePtrs->FinalRaceTime;
-		UE_LOG(LogTemp, Warning, TEXT("Final Race Time: , %f"), FinalRaceTime);
+		/*float FinalRaceTime = (float)GameModeBasePtrs->FinalRaceTime;*/
+		/*UE_LOG(LogTemp, Warning, TEXT("Final Race Time: , %f"), FinalRaceTime);*/
 		if (HUDWidget)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("HUDWidget collapsed"));
@@ -342,12 +401,19 @@ int APlayerPawn::RetLaps()
 }
 
 
+void APlayerPawn::RespawnFunction() {
+	CollisionBox->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	playerCrashed = true;
+	
+}
+
+
 // Collision
 
 void APlayerPawn::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent,
 	int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (OtherActor->IsA(ATrackActor::StaticClass()) || OtherActor->IsA(ATunnelActor::StaticClass()) || OtherActor->IsA(AStartLineIndicatorColliderActor::StaticClass()) || OtherActor->IsA(ACrystalActor::StaticClass()) || OtherActor->IsA(ARegularBorderActor::StaticClass()) || OtherActor->IsA(ARoofBorderActorTwo::StaticClass()))
+	if (OtherActor->IsA(ATrackActor::StaticClass()) || OtherActor->IsA(ATunnelActor::StaticClass()) || OtherActor->IsA(AStartLineIndicatorColliderActor::StaticClass()) || OtherActor->IsA(ACrystalActor::StaticClass()) || OtherActor->IsA(ACrystalActorRed::StaticClass()) || OtherActor->IsA(ARegularBorderActor::StaticClass()) || OtherActor->IsA(ARoofBorderActorTwo::StaticClass()) /*&& playerCrashed == false*/)
 	{
 		UWorld* World = GetWorld();
 		if (World)
@@ -355,12 +421,10 @@ void APlayerPawn::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* Ot
 			UE_LOG(LogTemp, Warning, TEXT("Ship hit the track."));
 			GEngine->AddOnScreenDebugMessage(-1, 12.f, FColor::Red, FString::Printf(TEXT("You crashed into the track!")));
 
-			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), PlayerExplosion, GetTransform(), true);
 			UGameplayStatics::PlaySound2D(World, DeathSound, 1.f, 1.f, 0.f, 0);
 
-			Health = 0.f;
-			CreateEndGameWidget();
-			this->Destroy();
+			Health--;
+			RespawnFunction();
 		}
 	}
 
@@ -370,6 +434,11 @@ void APlayerPawn::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* Ot
 
 		CheckpointPtr->checkpointHidden = true;
 		CheckpointsReached += 1;
+
+		RespawnLocation = GetActorLocation();
+		RespawnRotation = GetActorRotation();
+		GEngine->AddOnScreenDebugMessage(-1, 12.f, FColor::Yellow, FString::Printf(TEXT("Set Respawn location.")));
+		GEngine->AddOnScreenDebugMessage(-1, 12.f, FColor::Yellow, FString::Printf(TEXT("Set Respawn rotation.")));
 
 		GEngine->AddOnScreenDebugMessage(-1, 12.f, FColor::Yellow, FString::Printf(TEXT("Player reached a checkpoint!")));
 	}

@@ -37,26 +37,6 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerAudio")
 		USoundBase* FuelPickUpSound = nullptr;
-
-
-	// Camera Modifier
-
-	UPROPERTY(meta = (AllowPrivateAccess = "true"), EditAnywhere, Category = "CameraBoost")
-		TSubclassOf<UCameraModifier> BoostCameraModifierClass = nullptr;
-
-	UPROPERTY()
-		class UCameraModifier* BoostCameraModifier = nullptr;
-
-
-	// OnOverlap
-
-	UPROPERTY(EditAnywhere, Category = "BoostTime")
-		float BoostEffectLimit = 10.f;
-
-	UPROPERTY(EditAnywhere, Category = "BoostTime")
-		float BoostEffectDuration = 0.f;
-
-	bool BoostEffectUsed = false;
 	
 
 private:

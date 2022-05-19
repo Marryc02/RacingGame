@@ -55,6 +55,16 @@ void AStartLineActor::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor
 	{
 		APlayerPawn* PlayerPawnPtr = Cast<APlayerPawn>(OtherActor);
 
+		PlayerPawnPtr->RespawnLocation = GetActorLocation();
+		if (UGameplayStatics::GetCurrentLevelName(GetWorld()) == "ShootingLevel")
+		{
+			PlayerPawnPtr->RespawnRotation = GetActorRotation() += FRotator(0.f, 90.f, 0.f);
+		}
+		else if (UGameplayStatics::GetCurrentLevelName(GetWorld()) == "RacingLevel")
+		{
+			PlayerPawnPtr->RespawnRotation = GetActorRotation() += FRotator(0.f, -90.f, 0.f);
+		}
+
 		if (PlayerPawnPtr->CheckpointsReached == 3)
 		{
 			startLineHidden = true;

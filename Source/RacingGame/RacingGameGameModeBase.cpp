@@ -3,6 +3,10 @@
 
 #include "RacingGameGameModeBase.h"
 #include "Public/EndGameUI.h"
+#include "PlayerPawn.h"
+#include "GameFramework/Controller.h"
+#include "GameFramework/Pawn.h"
+#include "Kismet/GameplayStatics.h"
 
 ARacingGameGameModeBase::ARacingGameGameModeBase()
 {
@@ -12,6 +16,8 @@ ARacingGameGameModeBase::ARacingGameGameModeBase()
 
 void ARacingGameGameModeBase::BeginPlay()
 {
+	//Timer BeginPlay
+
 	GetWorld()->GetTimerManager().SetTimer(StartTimer, this, &ARacingGameGameModeBase::OnStartTimerComplete, 3.f, false);
 
 }
@@ -20,16 +26,19 @@ void ARacingGameGameModeBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	//Timer-related tick
+
 	if (gameHasStarted)
 	{
 		RaceTime += DeltaTime;
 	}
 
-
-	FinalRaceTime = RaceTime;
+	FinalRaceTime = RaceTime; 
 
 
 }
+
+//Timer-related
 
 void ARacingGameGameModeBase::OnStartTimerComplete()
 {

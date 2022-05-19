@@ -33,7 +33,7 @@ public:
 
 	// On startup
 	
-	class ARacingGameGameModeBase* GameModeBasePtrs = Cast<ARacingGameGameModeBase>(UGameplayStatics::GetGameMode(GetWorld()));
+	class ARacingGameGameModeBase* GameModeBasePtr = Cast<ARacingGameGameModeBase>(UGameplayStatics::GetGameMode(GetWorld()));
 	
 	FTimerHandle StartTimer;
 
@@ -126,10 +126,10 @@ public:
 	// Health
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerMesh")
-		int Health = 5;
+		int Health = 3;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerMesh")
-		int MaxHealth = 5;
+		int MaxHealth = 3;
 
 
 	// Shooting
@@ -183,11 +183,17 @@ public:
 		USoundBase* BoostSound = nullptr;
 
 
-	// Effects
+	//Respawning 
 
-	UPROPERTY(EditAnywhere, Category = "PlayerEffects")
-		UParticleSystem* PlayerExplosion = nullptr;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Respawning")
+		FVector RespawnLocation;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Respawning")
+		FRotator RespawnRotation;
 
+	bool playerCrashed = false;
+	void RespawnFunction();
+	float respawnWait = 0.f;
+	float respawnWaitLimit = 3.f;
 
 private:
 
